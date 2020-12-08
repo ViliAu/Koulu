@@ -352,18 +352,20 @@ int findKey(node* parent, int key) {
 		return 1;
 	}
 	else {
-		if (key > parent->value && parent->right != NULL)
+		if (key > parent->value && parent->right != NULL) {
 			if (findKey(parent->right, key) == 1) {
 				return 1;
 			}
-			else
-				return 0;
-		else if (key < parent->value && parent->left != NULL)
+		}
+		else
+			return 0;
+		else if (key < parent->value && parent->left != NULL) {
 			if (findKey(parent->left, key) == 1) {
 				return 1;
 			}
-			else
-				return 0;
+		}
+		else
+			return 0;
 	}
 	return 0;
 }
