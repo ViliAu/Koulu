@@ -28,8 +28,8 @@ void leftRotation(nodePtr*, int*);
 void printTree(nodePtr, int);
 void readFile(char *, nodePtr*, int *);
 int findKey(node*, int);
-int getNumberFromUser();
-void printMenu();
+int getNumberFromUser(void);
+void printMenu(void);
 void findKeyWrapper(nodePtr , int);
 void addRandomKeys(nodePtr*, int, int *);
 void deleteTree(nodePtr*);
@@ -37,7 +37,6 @@ void deleteTree(nodePtr*);
 int main(void) {
 	/* Init vars */
 	int unb = 0;
-	int i;
 	nodePtr tree = NULL;
 
 	int j;
@@ -351,23 +350,18 @@ int findKey(node* parent, int key) {
 	if (parent->value == key) {
 		return 1;
 	}
-	else {
-		if (key > parent->value && parent->right != NULL) {
-			if (findKey(parent->right, key) == 1) {
-				return 1;
-			}
+	else if (key > parent->value && parent->right != NULL) {
+		if (findKey(parent->right, key) == 1) {
+			return 1;
 		}
-		else
-			return 0;
-		if (key < parent->value && parent->left != NULL) {
-			if (findKey(parent->left, key) == 1) {
-				return 1;
-			}
-		}
-		else
-			return 0;
 	}
-	return 0;
+	else if (key < parent->value && parent->left != NULL) {
+		if (findKey(parent->left, key) == 1) {
+			return 1;
+		}
+	}
+	else
+		return 0;
 }
 
 void deleteTree(nodePtr* parent) {
