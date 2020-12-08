@@ -334,7 +334,7 @@ void rightRotation(nodePtr* parent, int* unb) {
 		}
 		*parent = grandChild;
 
-		printf("\nSubtree after RR-Rotation:\n");
+		printf("\nSubtree after RL-Rotation:\n");
 		printTree(*parent, 0);
 		printf("\n");
 	}
@@ -345,10 +345,10 @@ void rightRotation(nodePtr* parent, int* unb) {
 void findKeyWrapper(nodePtr tree, int j) {
 	if (j > 0) {
 		if (findKey(tree, j)) {
-			printf("Key %d found in the tree.\n", j);
+			printf("Key %d was found in the tree.\n", j);
 		}
 		else {
-			printf("Key %d not found in the tree.\n", j);
+			printf("Key %d was not found in the tree.\n", j);
 		}
 	}
 	else {
@@ -356,23 +356,29 @@ void findKeyWrapper(nodePtr tree, int j) {
 	}
 }
 
+/* Finds the given key from the tree. Complexity O(log_2(n)) */
 int findKey(node* parent, int key) {
+	/* If the tree doesn't exist */
 	if (parent == NULL) {
 		return 0;
 	}
+	/* If the given node has the key in search */
 	if (parent->value == key) {
 		return 1;
 	}
+	/* If the key is greater than the given node -> search right */
 	else if (key > parent->value && parent->right != NULL) {
 		if (findKey(parent->right, key) == 1) {
 			return 1;
 		}
 	}
+	/* If the key is less than the given node -> search left */
 	else if (key < parent->value && parent->left != NULL) {
 		if (findKey(parent->left, key) == 1) {
 			return 1;
 		}
 	}
+	/* If the key doesn't exist in the tree */
 	else
 		return 0;
 	return 0;
@@ -392,7 +398,6 @@ void deleteTree(nodePtr* parent) {
 void readFile(char *fileName, nodePtr* tree, int *unb) {
     FILE *file;
     int i;
-    int j = 0;
 
     if ((file = fopen(fileName, "r")) == NULL) {
         printf("Could not open file\n");
