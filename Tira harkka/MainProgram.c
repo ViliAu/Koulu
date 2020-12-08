@@ -56,25 +56,6 @@ int main(void) {
 				/* Gets the numbers from the file and prints them */
 				readFile("Defaults.txt", &tree, &unb);
 				printf("Adding numbers ");
-				for (i = 0; i < SIZE; i++) {
-					/* Discards the number if it has not been assigned */
-					if (numbersToAdd[i] == -1) {
-						break;
-					}
-					printf("%d ", numbersToAdd[i]);
-				}
-				printf("to the tree.\n");
-
-				/* Adds the numbers to the tree */
-				for (i = 0; i < SIZE; i++) {
-					/* Discards the number if it has not been assigned */
-					if (numbersToAdd[i] == -1) {
-						break;
-					}
-					addNode(&tree, numbersToAdd[i], &unb);
-					printTree(tree, 0);
-					printf("\n---\n");
-				}
 				printf("Tree: ");
 				printTree(tree, 0);
 				printf("\n");
@@ -191,29 +172,27 @@ void addRandomKeys(nodePtr* tree, int amount, int *unb) {
 	}
 }
 
-/* (Goel 2020) */
-// Function to print binary tree in 2D 
-// It does reverse inorder traversal 
+        	/* (Goel 2020) */
+/* Function to print binary tree in 2D 
+   It does reverse inorder traversal */
 void printTree(node* root, int space) {
 	int i;
-	// Base case 
 	if (root == NULL)
 		return;
-
-	// Increase distance between levels 
+	/* Increase distance between levels */ 
 	space += COUNT;
 
-	// Process right child first 
+	/* Process right child first */
 	printTree(root->right, space);
 
-	// Print current node after space 
-	// count 
+	/* Print current node after space 
+	   count */
 	printf("\n");
 	for (i = COUNT; i < space; i++)
 		printf(" ");
 	printf("%d", root->value);
 
-	// Process left child 
+	/* Process left child */
 	printTree(root->left, space);
 }
 
