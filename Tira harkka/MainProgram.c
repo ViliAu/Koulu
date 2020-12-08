@@ -54,8 +54,8 @@ int main(void) {
 				printf("Running test program.\n");
 				/* Gets the numbers from the file and prints them */
 				readFile("Defaults.txt", &tree, &unb);
-				printf("Adding numbers ");
-				printf("Tree: ");
+
+				printf("Formed tree: ");
 				printTree(tree, 0);
 				printf("\n");
 
@@ -66,31 +66,15 @@ int main(void) {
 				findKeyWrapper(tree, 16);
 
 				/*Add the numbers  26, 24, 22, 20, 18, 16 to the tree */
-				printf("\nAdding key 26\n");
 				addNode(&tree, 26, &unb);
-				printTree(tree, 0);
-				getchar();
-				printf("Adding key 24\n");
 				addNode(&tree, 24, &unb);
-				printTree(tree, 0);
-				getchar();
-				printf("Adding key 22\n");
 				addNode(&tree, 22, &unb);
-				printTree(tree, 0);
-				getchar();
-				printf("Adding key 20\n");
 				addNode(&tree, 20, &unb);
-				printTree(tree, 0);
-				getchar();
-				printf("Adding key 18\n");
 				addNode(&tree, 18, &unb);
-				printTree(tree, 0);
-				getchar();
-				printf("Adding key 16\n");
 				addNode(&tree, 16, &unb);
+				printf("\n");
 				printTree(tree, 0);
 				printf("\n");
-				getchar();
 
 				/* Perform search operations */
 				findKeyWrapper(tree, 10);
@@ -257,13 +241,25 @@ void leftRotation(nodePtr* parent, int* unb) {
 
 	/* LL-rotation */
 	if (child->state == 1) {
+		printf("Subtree before LL-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
+
 		(*parent)->left = child->right;
 		child->right = *parent;
 		(*parent)->state = 0;
 		(*parent) = child;
+
+		printf("\nSubtree after LL-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
 	}
 	/* LR-rotation */
 	else {
+		printf("Subtree before LR-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
+
 		grandChild = child->right;
 		child->right = grandChild->left;
 		grandChild->left = child;
@@ -284,6 +280,9 @@ void leftRotation(nodePtr* parent, int* unb) {
 			break;
 		}
 		*parent = grandChild;
+		printf("\nSubtree after LR-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
 	}
 	(*parent)->state = 0;
 	*unb = 0;
@@ -296,13 +295,24 @@ void rightRotation(nodePtr* parent, int* unb) {
 
 	/* RR-rotation */
 	if (child->state == -1) {
+		printf("Subtree before RR-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
+
 		(*parent)->right = child->left;
 		child->left = *parent;
 		(*parent)->state = 0;
 		(*parent) = child;
+
+		printf("\nSubtree after RR-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
 	}
 	/* RL-rotation */
 	else {
+		printf("Subtree before RL-Rotation:\n");
+		printTree(*parent, 0);
+
 		grandChild = child->left;
 		child->left = grandChild->right;
 		grandChild->right = child;
@@ -323,6 +333,10 @@ void rightRotation(nodePtr* parent, int* unb) {
 			break;
 		}
 		*parent = grandChild;
+
+		printf("\nSubtree after RR-Rotation:\n");
+		printTree(*parent, 0);
+		printf("\n");
 	}
 	(*parent)->state = 0;
 	*unb = 0;
@@ -344,7 +358,6 @@ void findKeyWrapper(nodePtr tree, int j) {
 
 int findKey(node* parent, int key) {
 	if (parent == NULL) {
-		printf("Tree is empty.\n");
 		return 0;
 	}
 	if (parent->value == key) {
@@ -362,6 +375,7 @@ int findKey(node* parent, int key) {
 	}
 	else
 		return 0;
+	return 0;
 }
 
 void deleteTree(nodePtr* parent) {
@@ -387,7 +401,7 @@ void readFile(char *fileName, nodePtr* tree, int *unb) {
 
     /* Get numbers from the file and add them to the array */
     fscanf(file, "%d", &i);
-    while (!feof(file) && j < 10000) {
+    while (!feof(file)) {
 		addNode(tree, i, unb);
         fscanf(file, "%d", &i);
     }
