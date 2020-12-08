@@ -359,7 +359,7 @@ int findKey(node* parent, int key) {
 		}
 		else
 			return 0;
-		else if (key < parent->value && parent->left != NULL) {
+		if (key < parent->value && parent->left != NULL) {
 			if (findKey(parent->left, key) == 1) {
 				return 1;
 			}
