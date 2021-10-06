@@ -5,6 +5,8 @@ const PORT = 8000;
 
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+
 app.use("/recipe", require("./recipe/food.js"));
 
 app.get("/", (req, res) => { 

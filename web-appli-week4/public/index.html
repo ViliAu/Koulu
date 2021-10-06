@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <script src="js/index.js" defer></script>
-        <link rel="stylesheet" href="css/style.css">
-        <title>Recipe book</title>
-    </head>
-    <body>
-        <h1 id="header">food name</h1>
-        <h2>Ingredients</h2>
-        <ul id="ingredients-list"></ul>
-        <h2>Instructions</h2>
-        <ol id="instructions-list"></ol>
-        <img src="" alt="image stuff">
 
-        <h1>Le recipe</h1>
-		<input type="text" id="name-text">
-		<h4>Ingredients</h4>
-		<textarea id="ingredients-text"></textarea>
-		<button id="add-ingredient" type="button">Add ingredient</button>
-		<h4>instructions</h4>
-		<textarea id="instructions-text"></textarea>
-		<button id="add-instruction" type="button">Add instruction</button>
-		<button id="submit" type="submit">Submit</button>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/index.js" defer></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Recipe book</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Recipes</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="col">
+            <h1 id="header">food name</h1>
+            <h2>Ingredients</h2>
+            <ul id="ingredients-list"></ul>
+            <h2>Instructions</h2>
+            <ol id="instructions-list"></ol>
+            <img src="" alt="image stuff">
+        </div>
+
+        <div class="col">
+            <h1>Add recipe</h1>
+            <input type="text" id="name-text">
+            <h4>Ingredients</h4>
+            <textarea id="ingredients-text"></textarea>
+            <button id="add-ingredient" class="btn" type="button">Add ingredient</button>
+            <h4>instructions</h4>
+            <textarea id="instructions-text"></textarea>
+            <button id="add-instruction" class="btn" type="button">Add instruction</button>
+            <button id="submit" class="btn" type="submit">Submit</button>
+            <input type="file" id="image-input" name="recipe image" accept="image/png, image/jpeg" multiple>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+</body>
 
 </html>

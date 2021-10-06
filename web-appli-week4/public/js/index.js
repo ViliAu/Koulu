@@ -12,19 +12,19 @@ let ingredientList = [];
 let instructionList = [];
 
 async function initializeCode() {
-    document.getElementById("header").innerHTML = await getFood();
+    const foodData = await getFood();
+    updateRecipe(foodData);
+
     // Assign ingredient submit button function
     document.getElementById("add-ingredient").addEventListener("click", () => {
         const textArea = document.getElementById("ingredients-text");
         ingredientList.push(textArea.value);
-        console.log(textArea.value);
         textArea.value = "";
     });
     // Assign instruction submit button function
     document.getElementById("add-instruction").addEventListener("click", () => {
         const textArea = document.getElementById("instructions-text");
         instructionList.push(textArea.value);
-        console.log(textArea.value);
         textArea.value = "";
     });
     // Assign submit button function
@@ -34,13 +34,33 @@ async function initializeCode() {
             return;
         await submitData();
         name.value = "";
+        ingredientList = [];
+        instructionList = [];
     });
+}
+
+function updateRecipe(data) {
+    document.getElementById("header").innerHTML = data.name;
+    const ingList = document.getElementById("ingredients-list");
+    const instList = document.getElementById("instructions-list");
+    ingList.innerHTML = "";
+    instList.innerHTML = "";
+    for (let o of data.ingredients) {
+        const ing = document.createElement("li");
+        ing.innerHTML = o;
+        ingList.appendChild(ing);
+    }
+    for (let o of data.instructions) {
+        const inst = document.createElement("li");
+        inst.innerHTML = o;
+        instList.appendChild(inst);
+    }
 }
 
 async function getFood() {
     const res = await fetch("http://[::1]:8000/recipe/pizza");
     const data = await res.json();
-    return data.recipe;
+    return data;
 }
 
 async function submitData() {
@@ -54,13 +74,3 @@ async function submitData() {
         headers: {"Content-type": "application/json"},
         body: JSON.stringify(object)});
 }
-
-/*
-method: "post",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: '{ "poem": "' + poemInput.value + '" }'
-           })
-
-*/
