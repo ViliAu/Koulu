@@ -1,8 +1,8 @@
-if(document.readyState !== "loading"){
+if (document.readyState !== "loading") {
     console.log("Document is ready");
     initializeCode();
 } else {
-    document.addEventListener("DOMContentLoaded", function(){
+    document.addEventListener("DOMContentLoaded", function () {
         console.log("Document ready after waiting!");
         initializeCode();
     })
@@ -58,19 +58,35 @@ function updateRecipe(data) {
 }
 
 async function getFood() {
-    const res = await fetch("http://[::1]:8000/recipe/pizza");
+    const res = await fetch("http://localhost:1234/recipe/pizza");
     const data = await res.json();
     return data;
 }
 
 async function submitData() {
-    const object = {name: document.getElementById("name-text").value,
+    const object = {
+        name: document.getElementById("name-text").value,
         ingredients: ingredientList,
         instructions: instructionList
     }
     console.log(JSON.stringify(object));
-    const res = await fetch("http://[::1]:8000/recipe",  {
+    const res = await fetch("http://localhost:1234/recipe/", {
         method: "post",
-        headers: {"Content-type": "application/json"},
-        body: JSON.stringify(object)});
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(object)
+    });
+    // Upload files
+    await uploadFiles();
+}
+
+async function uploadFiles() {
+    let files = document.getElementById("image-input").files;
+    let data = new FormData();
+    for (let img of files)
+        data.append("images", img);
+    const res = await fetch("http://localhost:1234/images/", {
+        method: "post",
+        body: data
+    });
+    document.getElementById("image-input").value = null;
 }

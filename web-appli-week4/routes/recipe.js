@@ -1,9 +1,7 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const fs = require("fs");
 const router = express.Router();
 
-let recipeList = [{name: "pizza", ingredients: ["flour", "water", "yeast", "oil"], instructions: ["mix all of  the ingredients", "enjoy"]}];
+let recipeList = [{name: "Pizza", ingredients: ["flour", "water", "yeast", "oil"], instructions: ["mix all of  the ingredients", "enjoy"]}];
 
 router.get("/", (req, res) => {
     res.json("Welcome to the recipe api");
@@ -16,6 +14,7 @@ router.get("/:food", (req, res) => {
 
 router.post("/", (req, res) => {
     recipeList.push(req.body);
+    console.log(req.body);
     res.send(req.body);
 });
 
