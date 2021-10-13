@@ -13,7 +13,7 @@ router.get("/:imageId", async (req, res) => {
         const img = await Image.findById(req.params.imageId);
         if (img) {
             res.header("Content-Type", img.mimetype);
-            res.header("Content-Disposition", `attachment; filename="${img.name}"`);
+            res.header("Content-Disposition", `inline; filename="${img.name}"`);
             res.send(img.buffer);
         }
         else {
