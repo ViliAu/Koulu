@@ -7,3 +7,8 @@ body {
 .brand-logo {
     margin-left: 6px;
 }
+
+#recipe-text {
+    margin-right: 6px;
+    margin-bottom: 6px;
+}

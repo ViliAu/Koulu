@@ -12,8 +12,11 @@ let ingredientList = [];
 let instructionList = [];
 
 async function initializeCode() {
-    const foodData = await getFood();
-    updateRecipe(foodData);
+    const recipeData = await getRecipe("Pizza");
+    if (recipeData)
+        updateRecipe(recipeData);
+    // Get special diets
+    await getDiets();
 
     // Assign ingredient submit button function
     document.getElementById("add-ingredient").addEventListener("click", () => {
@@ -37,6 +40,42 @@ async function initializeCode() {
         ingredientList = [];
         instructionList = [];
     });
+    // Assign reipe text input field event
+    document.getElementById("recipe-search").addEventListener("keyup", async (key) => {
+        if (key.key !== "Enter")
+            return;
+        const recipeSearch = document.getElementById("recipe-search");
+        const recipe = await getRecipe(recipeSearch.value);
+        if (recipe)
+            updateRecipe(recipe);
+        recipeSearch.value = "";
+    });
+
+}
+
+async function getDiets() {
+    try {
+        const res = await fetch("http://localhost:1234/recipe");
+        const dietArray = await res.json();
+        if (res) {
+            for (let i = 0; i < dietArray.length; i++) {
+                const label = document.createElement("label");
+                const textParent = document.createElement("p");
+                const input = document.createElement("input");
+                const textSpan = document.createElement("span");
+                textSpan.innerHTML = dietArray[i].name;
+                input.type = "checkbox";
+                input.className = "filled-in";
+                label.appendChild(input);
+                label.appendChild(textSpan);
+                textParent.appendChild(label);
+                document.getElementById("diets-list").appendChild(textParent);
+            }
+        }
+    }
+    catch(e) {
+        console.log(e);
+    }
 }
 
 function updateRecipe(data) {
@@ -57,10 +96,16 @@ function updateRecipe(data) {
     }
 }
 
-async function getFood() {
-    const res = await fetch("http://localhost:1234/recipe/pizza");
-    const data = await res.json();
-    return data;
+async function getRecipe(recipeName) {
+    let res = null;
+    res = await fetch("http://localhost:1234/recipe/" + recipeName);
+    if (res) {
+        const data = await res.json();
+        return data;
+    }
+    else {
+        return null;
+    }
 }
 
 async function submitData() {
@@ -70,11 +115,16 @@ async function submitData() {
         instructions: instructionList
     }
     console.log(JSON.stringify(object));
-    const res = await fetch("http://localhost:1234/recipe/", {
-        method: "post",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(object)
-    });
+    try {
+        await fetch("http://localhost:1234/recipe/", {
+            method: "post",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(object)
+        });
+    }
+    catch (e) {
+        console.log(e);
+    }
     // Upload files
     await uploadFiles();
 }
@@ -84,7 +134,7 @@ async function uploadFiles() {
     let data = new FormData();
     for (let img of files)
         data.append("images", img);
-    const res = await fetch("http://localhost:1234/images/", {
+    await fetch("http://localhost:1234/images/", {
         method: "post",
         body: data
     });

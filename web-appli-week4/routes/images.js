@@ -7,7 +7,6 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
     res.send("Thanks bro");
-    console.log("asd");
 });
 
 module.exports = router;

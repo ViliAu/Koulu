@@ -17,7 +17,11 @@
 <body>
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Recipes</a>
+            <a href="#" class="brand-logo left">Recipes</a>
+            <ul class="search-wrapper right">
+                <li><h5 id="recipe-text">Search for a recipe</h5></li>
+                <li><input type="search" id="recipe-search" class="right"></li>
+            </ul>
         </div>
     </nav>
     <div class="container">
@@ -39,8 +43,9 @@
             <h4>instructions</h4>
             <textarea id="instructions-text"></textarea>
             <button id="add-instruction" class="btn" type="button">Add instruction</button>
-            <button id="submit" class="btn" type="submit">Submit</button>
             <input type="file" id="image-input" name="recipe image" accept="image/png, image/jpeg" multiple>
+            <form action = "#" id="diets-list"></form>
+            <button id="submit" class="btn" type="submit">Submit</button>
         </div>
     </div>
     <script type="text/javascript" src="js/materialize.min.js"></script>
