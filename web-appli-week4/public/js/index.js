@@ -11,12 +11,16 @@ if (document.readyState !== "loading") {
 let ingredientList = [];
 let instructionList = [];
 
+let dietList = [];
+
 async function initializeCode() {
+    // Get special diets
+    await getDiets();
+
+    // Display pizza recipe
     const recipeData = await getRecipe("Pizza");
     if (recipeData)
         updateRecipe(recipeData);
-    // Get special diets
-    await getDiets();
 
     // Assign ingredient submit button function
     document.getElementById("add-ingredient").addEventListener("click", () => {
@@ -56,24 +60,24 @@ async function initializeCode() {
 async function getDiets() {
     try {
         const res = await fetch("http://localhost:1234/recipe");
-        const dietArray = await res.json();
+        dietList = await res.json();
         if (res) {
-            for (let i = 0; i < dietArray.length; i++) {
+            for (let i = 0; i < dietList.length; i++) {
                 const label = document.createElement("label");
                 const textParent = document.createElement("p");
                 const input = document.createElement("input");
                 const textSpan = document.createElement("span");
-                textSpan.innerHTML = dietArray[i].name;
+                textSpan.innerHTML = dietList[i].name;
                 input.type = "checkbox";
-                input.className = "filled-in";
+                input.className = "filled-in diets-checkbox";
                 label.appendChild(input);
                 label.appendChild(textSpan);
                 textParent.appendChild(label);
-                document.getElementById("diets-list").appendChild(textParent);
+                document.getElementById("diet-buttons").appendChild(textParent);
             }
         }
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
     }
 }
@@ -82,6 +86,7 @@ function updateRecipe(data) {
     document.getElementById("header").innerHTML = data.name;
     const ingList = document.getElementById("ingredients-list");
     const instList = document.getElementById("instructions-list");
+    const catList = document.getElementById("diets-list")
     ingList.innerHTML = "";
     instList.innerHTML = "";
     for (let o of data.ingredients) {
@@ -93,6 +98,16 @@ function updateRecipe(data) {
         const inst = document.createElement("li");
         inst.innerHTML = o;
         instList.appendChild(inst);
+    }
+    for (let o of data.categories) {
+        const cat = document.createElement("li");
+        for (let i = 0; i < dietList.length; i++) {
+            if (dietList[i]._id === o) {
+                cat.innerHTML = dietList[i].name;
+                break;
+            }
+        }
+        catList.appendChild(cat);
     }
 }
 
@@ -109,10 +124,29 @@ async function getRecipe(recipeName) {
 }
 
 async function submitData() {
+    // Get checked diets
+    let dietArray = [];
+    for (let o of document.getElementsByClassName("diets-checkbox")) {
+        if (o.checked) {
+            // fetch objectID by name
+            for (let i = 0; i < dietList.length; i++) {
+                if (dietList[i].name === o.parentElement.childNodes[1].innerHTML) {
+                    dietArray.push(dietList[i]._id);
+                    o.checked = false;
+                    break;
+                }
+            }
+        }
+    }
+    // Upload files to get the file ids
+    const imgIDs = await uploadFiles();
+
     const object = {
         name: document.getElementById("name-text").value,
         ingredients: ingredientList,
-        instructions: instructionList
+        instructions: instructionList,
+        categories: dietArray,
+        images: imgIDs
     }
     console.log(JSON.stringify(object));
     try {
@@ -125,18 +159,23 @@ async function submitData() {
     catch (e) {
         console.log(e);
     }
-    // Upload files
-    await uploadFiles();
 }
 
 async function uploadFiles() {
-    let files = document.getElementById("image-input").files;
+    let files = document.getElementById("camera-file-input").files;
     let data = new FormData();
     for (let img of files)
         data.append("images", img);
-    await fetch("http://localhost:1234/images/", {
+    let res = null;
+    try {
+        res = await fetch("http://localhost:1234/images/", {
         method: "post",
         body: data
-    });
-    document.getElementById("image-input").value = null;
+        });
+    }
+    catch(e) {
+        console.log(e);
+    }
+    document.getElementById("camera-file-input").value = null;
+    return await res.json();
 }

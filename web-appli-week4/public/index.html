@@ -8,7 +8,7 @@
     <script src="js/index.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
     <title>Recipe book</title>
-
+    <ul id="recipe-diets"></ul>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
@@ -31,6 +31,7 @@
             <ul id="ingredients-list"></ul>
             <h2>Instructions</h2>
             <ol id="instructions-list"></ol>
+            <ul id="diets-list"></ul>
             <img src="" alt="image stuff">
         </div>
 
@@ -43,8 +44,8 @@
             <h4>instructions</h4>
             <textarea id="instructions-text"></textarea>
             <button id="add-instruction" class="btn" type="button">Add instruction</button>
-            <input type="file" id="image-input" name="recipe image" accept="image/png, image/jpeg" multiple>
-            <form action = "#" id="diets-list"></form>
+            <input type="file" id="camera-file-input" name="recipe image" accept="image/png, image/jpeg" enctype="multipart/form-data" multiple>
+            <form action = "#" id="diet-buttons"></form>
             <button id="submit" class="btn" type="submit">Submit</button>
         </div>
     </div>

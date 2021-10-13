@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const Recipe = require("../models/Recipe");
 const Category = require("../models/Category");
 const router = express.Router();
@@ -38,7 +37,9 @@ router.post("/", async (req, res) => {
             await new Recipe({
                 name: req.body.name,
                 ingredients: req.body.ingredients,
-                instructions: req.body.instructions
+                instructions: req.body.instructions,
+                categories: req.body.categories,
+                images: req.body.images
             }).save();
             res.send(req.body);
         }
