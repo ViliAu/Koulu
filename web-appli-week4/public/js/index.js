@@ -59,7 +59,7 @@ async function initializeCode() {
 
 async function getDiets() {
     try {
-        const res = await fetch("http://localhost:1234/recipe");
+        const res = await fetch("/recipe");
         dietList = await res.json();
         if (res) {
             for (let i = 0; i < dietList.length; i++) {
@@ -89,6 +89,7 @@ function updateRecipe(data) {
     const catList = document.getElementById("diets-list")
     ingList.innerHTML = "";
     instList.innerHTML = "";
+    catList.innerHTML = "";
     for (let o of data.ingredients) {
         const ing = document.createElement("li");
         ing.innerHTML = o;
@@ -109,11 +110,33 @@ function updateRecipe(data) {
         }
         catList.appendChild(cat);
     }
+    // Update images
+    updateImages(data.images);
+}
+
+async function updateImages(images) {
+    document.getElementById("images").innerHTML = "";
+    let imgArray = [];
+    try {
+        for (let i = 0; i < images.length; i++) {
+            const res = await fetch(`/images/${images[i]}`);
+            imgBlob = await res.blob();
+            imgArray.push(imgBlob);
+        }
+    }
+    catch (e) {
+        console.log("Image fetching failed");
+    }
+    for (let o of imgArray) {
+        let img = document.createElement("img");
+        img.src = URL.createObjectURL(o);
+        document.getElementById("images").appendChild(img);
+    }
 }
 
 async function getRecipe(recipeName) {
     let res = null;
-    res = await fetch("http://localhost:1234/recipe/" + recipeName);
+    res = await fetch("/recipe/" + recipeName);
     if (res) {
         const data = await res.json();
         return data;

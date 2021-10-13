@@ -8,8 +8,22 @@ router.get("/", (req, res) => {
     res.send("Thanks bro");
 });
 
-router.get("/:imageId", (req, res) => {
-    
+router.get("/:imageId", async (req, res) => {
+    try {
+        const img = await Image.findById(req.params.imageId);
+        if (img) {
+            res.header("Content-Type", img.mimetype);
+            res.header("Content-Disposition", `attachment; filename="${img.name}"`);
+            res.send(img.buffer);
+        }
+        else {
+            res.status(404).send("Couldn't find image " + req.params.imageId);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.status(404).send("Couldn't find image " + req.params.imageId);
+    }
 })
 
 router.post("/", upload.array('images', 12), async (req, res) => {
@@ -24,7 +38,7 @@ router.post("/", upload.array('images', 12), async (req, res) => {
             }).save();
             imgArray.push(dbImg.id)
         }
-        catch(e) {
+        catch (e) {
             console.log(e);
         }
     }
