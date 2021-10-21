@@ -173,7 +173,7 @@ async function submitData() {
     }
     console.log(JSON.stringify(object));
     try {
-        await fetch("http://localhost:1234/recipe/", {
+        await fetch("/recipe/", {
             method: "post",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(object)
@@ -191,7 +191,7 @@ async function uploadFiles() {
         data.append("images", img);
     let res = null;
     try {
-        res = await fetch("http://localhost:1234/images/", {
+        res = await fetch("/images/", {
         method: "post",
         body: data
         });
