@@ -1,0 +1,34 @@
+doctype html
+html(lang=en)
+    head 
+        title Log in
+        link(rel='stylesheet', type='text/css', href='css/stylesheet.css')
+        script(src="js/index.js")
+    body 
+        form(action="#" class="input-form" id="login-form")
+            container
+                h2 Log in
+                div(class="input-container")
+                    label(for="email")
+                        b E-mail
+                    input(type="email" id="email-login")
+
+                div(class="input-container")
+                    label(for="password")
+                        b Password 
+                    input(type="password" id="password-login")
+                input(type="submit" id="btn-login" value="Log in")
+        
+        form(action="#" class="input-form" id="register-form")
+            container
+                h2 Register
+                div(class="input-container")
+                    label(for="email")
+                        b E-mail
+                    input(type="email" id="email-register" required="AAAAA") 
+
+                div(class="input-container")
+                    label(for="password")
+                        b Password 
+                    input(type="text" id="password-register" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~`!@#$%^&*()\\-_+={}[\\]|/;:\"<>,./?]).{8,}$")
+                input(type="submit" id="btn-register" value="Register account")
