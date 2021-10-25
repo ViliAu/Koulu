@@ -17,7 +17,7 @@ app.use(express.json());
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
-app.use("/user", require("./api/user.js"));
+app.use("/api/user", require("./api/user.js"));
 
 app.get("/", (req, res) => { 
   res.render("index");
