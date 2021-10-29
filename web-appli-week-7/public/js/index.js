@@ -8,9 +8,12 @@ if (document.readyState !== "loading") {
     })
 }
 
+let token = "";
+
 async function initializeCode() {
     document.getElementById("btn-login").addEventListener("click", loginBtnListener);
     document.getElementById("btn-register").addEventListener("click", registerBtnListener);
+    document.getElementById("btn-private").addEventListener("click", privateBtnListener);
 }
 
 async function loginBtnListener() {
@@ -75,9 +78,19 @@ async function loginUser(email, psw) {
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(object)
         });
+        body = await res.json();
+        token = `Bearer ${body.token}`
         return res.ok;
     }
     catch {
         return false;
     }
+}
+
+async function privateBtnListener(token) {
+    const res = await fetch("/api/private", {
+        method: "get",
+        headers: {"Authorization": token}
+    })
+    console.log(await res.json());
 }
