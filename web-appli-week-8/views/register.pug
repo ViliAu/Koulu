@@ -1,0 +1,21 @@
+doctype html
+html(lang=en)
+    head 
+        title Register
+        link(rel='stylesheet', type='text/css', href='css/stylesheet.css')
+        script(src="js/register.js")
+    body 
+        form(action="#" class="input-form" id="form-register")
+            container
+                h2 Register
+                div(class="input-container")
+                    label(for="email")
+                        b E-mail
+                    input(type="email" id="email-register" required="AAAAA") 
+
+                div(class="input-container")
+                    label(for="password")
+                        b Password 
+                    input(type="password" id="password-register" required)
+                input(type="submit" id="btn-register" value="Register account")
+    h3(id="error")

@@ -1,0 +1,21 @@
+doctype html
+html(lang=en)
+    head 
+        title Log in
+        link(rel='stylesheet', type='text/css', href='css/stylesheet.css')
+        script(src="js/login.js")
+    body 
+        form(action="#" class="input-form" id="form-login")
+            container
+                h2 Log in
+                div(class="input-container")
+                    label(for="email")
+                        b E-mail
+                    input(type="email" id="email-login")
+
+                div(class="input-container")
+                    label(for="password")
+                        b Password 
+                    input(type="password" id="password-login")
+                input(type="submit" id="btn-login" value="Log in")
+        h3(id="error")

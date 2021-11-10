@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #dddddd;
+}
+
+label {
+    margin: 8px;
+    display:inline-block;
+}
+
+.input-form {
+    box-shadow: 0 6px 6px rgba(0,0,0,0.2);
+    background-color: #fafafa;
+    padding: 8px;
+    margin: 8px;
+    width: max-content;
+    border-radius: 8px;
+}
+
+.input-container {
+    display: block;
+}
