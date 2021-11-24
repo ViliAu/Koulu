@@ -1,35 +1,21 @@
-import { useState } from 'react';
-import MyList from './MyList';
+import React, { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function MyContainer() {
-    const [items, setItems] = useState([
-        {id: "1", text: "This is an item"},
-        {id: "2", text: "Also this"}
-    ]);
-    const header = "Really epic list component"
-    function onButtonClick() {
-        setItems( arr => [...arr, {id: (items.length+1).toString(), text: document.querySelector("textarea").value, clicked: false}]);
-    }
-    function updateItem(id) {
-        let newArr = [...items];
-        for (let i of newArr) {
-            if (i.id === id) {
-                i.clicked = !i.clicked;
-            }
-        }
-        setItems(newArr)
-    }
+    const { t, i18n } = useTranslation();
     return (
-        <>
-            <textarea></textarea>
-            <button onClick={onButtonClick}>Button</button>
-            <MyList
-                updateItem={updateItem}
-                header={header}
-                items={items}
-            />
-        </>
+        <div>
+            <h1 id="">{t("Frontpage")}</h1>
+        </div>
     );
 }
 
-export default MyContainer;
+// i18n translations might still be loaded by the http backend
+// use react's Suspense
+export default function App() {
+    return (
+      <Suspense fallback="loading">
+        <MyContainer />
+      </Suspense>
+    );
+}
