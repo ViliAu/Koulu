@@ -1,0 +1,14 @@
+{
+  "name": "web-appli-week-11",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "install": "cd client && npm install",
+	"dev:client": "cd client && npm start",
+	"preinstall": "cd server && npm install",
+	"dev:server": "cd server && npm run dev"
+  },
+  "author": "ViliAu",
+  "license": "ISC"
+}
