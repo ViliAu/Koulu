@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "install": "cd client && npm install",
-	"dev:client": "cd client && npm start",
-	"preinstall": "cd server && npm install",
-	"dev:server": "cd server && npm run dev"
+    "dev:client": "cd client && npm start",
+    "preinstall": "cd server && npm install",
+    "dev:server": "cd server && npm run dev"
   },
   "author": "ViliAu",
   "license": "ISC"
