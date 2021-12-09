@@ -1,15 +1,22 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css';
 import BookInput from './components/BookInput';
+import BookData from './components/BookData';
+import NotFound from './components/NotFound';
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
+    <Router>
+      <div className="App">
         <h1>Books</h1>
-        <BookInput/>
-      </header>
-    </div>
+        <Routes>
+          <Route path="/" element={<BookInput />} />
+          <Route path="/book/:id" element={<BookData />} />
+          <Route path="*" element={<NotFound />}/>
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

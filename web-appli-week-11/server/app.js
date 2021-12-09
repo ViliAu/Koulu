@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const port = process.env.PORT || 1234;
 
 // Init mongoose
 const mongoDB = "mongodb://localhost:27017/testdb";
@@ -20,19 +19,23 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api/book', require('./routes/book'));
 
 // Enable cors
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.resolve("..", "client", "build")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve("..", "client", "build", "index.html"))
+    });
+}
+else if (process.env.NODE_ENV === "development") {
     const corsOptions = {
         origin: "http://localhost:3000",
         oprionSuccessStatus: 200
     };
     app.use(cors(corsOptions));
 }
-
-app.use('/api/book', require('./routes/book'));
-
-app.listen(port, () => {console.log(`Listening to port ${port}`)})
 
 module.exports = app;
