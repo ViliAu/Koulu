@@ -5,26 +5,33 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import LinkContainer from 'react-router-bootstrap/LinkContainer'
 
 const MyNavbar = () => {
     return (
         <>
             <Navbar bg='dark' variant='dark' sticky="top" >
                 <Container >
-                    <Navbar.Brand href="/" >
-                        <img
-                            alt=''
-                            src='logo192.png'
-                            width='30'
-                            height='30'
-                            className='d-inline-block align-top'
-                        />{' '}
-                        Coding site
-                    </Navbar.Brand>
+                    <LinkContainer to='/'>
+                        <Navbar.Brand>
+                            <img
+                                alt=''
+                                src='logo192.png'
+                                width='30'
+                                height='30'
+                                className='d-inline-block align-top'
+                            />{' '}
+                            Coding site
+                        </Navbar.Brand>
+                    </LinkContainer>
                     <Navbar.Collapse>
                         <Nav className='me-auto'>
-                            <Nav.Link href='/posts'>Posts</Nav.Link>
-                            <Nav.Link href='/user'>User</Nav.Link>
+                            <LinkContainer to='/posts'>
+                                <Nav.Link>Posts</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to='/user'>
+                                <Nav.Link>User</Nav.Link>
+                            </LinkContainer>
                         </Nav>
                         <Form className='d-flex' style={{ paddingRight: 10 }}>
                             <FormControl
@@ -51,8 +58,12 @@ const LogInText = () => {
         return (
             <Nav>
                 <NavDropdown title={userName} id="navbarScrollingDropdown">
-                    <NavDropdown.Item href="/user">User</NavDropdown.Item>
-                    <NavDropdown.Item href="/posts">Posts</NavDropdown.Item>
+                    <LinkContainer to='/user'>
+                        <NavDropdown.Item>User</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to='/posts'>
+                        <NavDropdown.Item>Posts</NavDropdown.Item>
+                    </LinkContainer>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/logout">Log out</NavDropdown.Item>
                 </NavDropdown>
@@ -62,8 +73,12 @@ const LogInText = () => {
     else {
         return (
             <Nav>
-                <Nav.Link href="/login" style={{ paddingRight: 10 }}>Log in</Nav.Link>
-                <Nav.Link href="/register">Register</Nav.Link>
+                <LinkContainer to='/login'>
+                    <Nav.Link style={{ paddingRight: 10 }}>Log in</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to='/register'>
+                    <Nav.Link>Register</Nav.Link>
+                </LinkContainer>
             </Nav>
         );
     }

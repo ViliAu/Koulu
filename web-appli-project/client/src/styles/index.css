@@ -8,6 +8,7 @@ html body {
 
   min-height: 100vh;
   background-color: #141618;
+  color: rgb(240, 240, 240);
 }
 
 code {

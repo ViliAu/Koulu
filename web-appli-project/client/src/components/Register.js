@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import CenterItem from './CenterItem';
 import Helmet from 'react-helmet';
-import '../styles/RegisterStyle.css';
+//import '../styles/RegisterStyle.css';
 
 const Register = () => {
     return (
@@ -12,15 +12,17 @@ const Register = () => {
             <Helmet>
                 <title>Register user</title>
             </Helmet>
-            <CenterItem>
+            <Container className='text-center'>
                 <img
                     alt=''
                     src='logo192.png'
                 />
-            </CenterItem>
+                <h1 className='display-3 text-center'>Register</h1>
+            </Container>
+
             <CenterItem>
                 <Form className='registerForm'>
-                    <h1 className='display-3'>Register</h1>
+
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" />

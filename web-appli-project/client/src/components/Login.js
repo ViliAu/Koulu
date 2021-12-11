@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Helmet from 'react-helmet';
 import CenterItem from './CenterItem';
-import '../styles/LoginStyle.css';
+import Container from 'react-bootstrap/Container'
 
 const Login = () => {
     return (
@@ -11,14 +11,15 @@ const Login = () => {
             <Helmet>
                 <title>Log in</title>
             </Helmet>
-            <CenterItem>
+            <Container className='text-center'>
                 <img
                     alt=''
                     src='logo192.png'
                     className='center'
                 />
-                <h1 className='display-3'>Log in</h1>
-            </CenterItem>
+            <h1 className='display-3 text-center'>Log in</h1>
+            </Container>
+            
             <CenterItem>
                 <Form className='registerForm'>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
