@@ -2,7 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const PostPreview = () => {
     let post = {};
@@ -13,36 +13,39 @@ const PostPreview = () => {
     post.commentAmount = 0;
     post.author = {}
     post.author.name = "UUSERI557"
+    post.id = '1';
 
     return (
-        <Card bg='dark' variant='dark' text='light' border='secondary'>
-            <Card.Header>{post.header}</Card.Header>
-            <Card.Body>
-                <Row>
-                    <Col xs={'auto'}>
-                        <div className='text-center'>{post.rating}</div>
-                        <div className='text-center' style={{ fontSize: 10 }}>rating</div>
-                    </Col>
-                    <Col>{post.contentPreview}</Col>
-                </Row>
-            </Card.Body>
-            <Card.Footer>
-                <Row>
-                    <Col xs={'auto'}>
-                        <img
-                            alt=''
-                            src='logo192.png'
-                            width='25'
-                            height='25'
-                            className='align-top'
-                        />{' '}
-                        {post.author.name}
-                    </Col>
-                    <Col></Col>
-                    <Col xs={'auto'} className='text-muted'>{post.timeStamp}</Col>
-                </Row>
-            </Card.Footer>
-        </Card>
+        <Link to={post.id} style={{ textDecoration: 'none' }}>
+            <Card bg='dark' variant='dark' text='light' border='secondary'>
+                <Card.Header>{post.header}</Card.Header>
+                <Card.Body>
+                    <Row>
+                        <Col xs={'auto'}>
+                            <div className='text-center'>{post.rating}</div>
+                            <div className='text-center' style={{ fontSize: 10 }}>rating</div>
+                        </Col>
+                        <Col>{post.contentPreview}</Col>
+                    </Row>
+                </Card.Body>
+                <Card.Footer>
+                    <Row>
+                        <Col xs={'auto'}>
+                            <img
+                                alt=''
+                                src='/logo192.png'
+                                width='25'
+                                height='25'
+                                className='align-top'
+                            />{' '}
+                            {post.author.name}
+                        </Col>
+                        <Col></Col>
+                        <Col xs={'auto'} className='text-muted'>{post.timeStamp}</Col>
+                    </Row>
+                </Card.Footer>
+            </Card>
+        </Link>
     )
 }
 

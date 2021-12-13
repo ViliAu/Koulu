@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Helmet from 'react-helmet';
 import Container from "react-bootstrap/Container";
@@ -16,6 +17,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/androidstudio.css';
 
 function App() {
+  /*
+  const [token, setToken] = useState('');
+  useState(() => {
+    // Event listener for auth token changes
+    function checkUserData() {
+      console.log("HMM AKTO")
+      setToken(localStorage.getItem('auth_token'));
+    }
+    window.addEventListener('storage', checkUserData);
+    return () => {
+      window.removeEventListener('storage', checkUserData);
+    }
+  });*/
   return (
     <Router>
       <Helmet>
@@ -25,8 +39,8 @@ function App() {
       <Container className='App' bg='dark'>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/posts" element={<Posts />} />
-          <Route path="/post/:id" element={<Post />} />
+          <Route path="/posts/:id" element={<Posts />} />
+          <Route path="/posts/" element={<Posts />} />
           <Route path="/user" element={<User />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

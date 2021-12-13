@@ -71,7 +71,7 @@ const CodeInput = ({preview, updateCode, code, formattedCode}) => {
     }
     else {
         return (
-            <pre><code><Form.Control as="textarea" placeholder="Insert your code snippet here" defaultValue={code} onKeyUp={() => { updateCode() }} style={{height: 'auto', borderTopLeftRadius: 0, borderTopRightRadius: 0}}/></code></pre>
+            <pre><code><Form.Control as="textarea" placeholder="Insert your code snippet here" defaultValue={code} onKeyUp={() => { updateCode() }} style={{height: 'auto', borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 0}}/></code></pre>
         );
     }
 }
