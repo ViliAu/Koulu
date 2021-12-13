@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState } from 'react';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -6,11 +6,14 @@ import Container from 'react-bootstrap/Container';
 import CenterItem from './CenterItem';
 import Helmet from 'react-helmet';
 import RedirectComponent from './RedirectComponent';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 const Register = () => {
     const [validated, setValidated] = useState(false);
     const [redirect, setRedirect] = useState(false);
     const [password, setPassword] = useState(false);
+
+    let pswdVisible = false;
 
     const checkFormValidity = async (event) => {
         // Prevent page reload and default html validation
@@ -29,7 +32,7 @@ const Register = () => {
         let user = {};
         user.name = document.getElementById('formUsername').value;
         user.password = document.getElementById('formPassword').value;
-        
+
         // Server side check
         let data = {};
         try {
@@ -49,7 +52,7 @@ const Register = () => {
             setValidated(true);
             if (data.error) {
                 alert(data.error);
-            }     
+            }
         }
         else {
             if (validated) {
@@ -61,6 +64,14 @@ const Register = () => {
     const updatePassword = (event) => {
         const pswd = event.currentTarget;
         setPassword(pswd.value);
+    }
+
+    const changePasswordVisibility = () => {
+        pswdVisible = !pswdVisible;
+        document.getElementById('formPassword').type = pswdVisible ? 'text' : 'password';
+        document.getElementById('formConfirmPassword').type = pswdVisible ? 'text' : 'password';
+        const pswdBtn = document.getElementById('pswdButton');
+        pswdBtn.querySelector('img').src = pswdVisible ? '/eye.png' : '/eye_closed.png';
     }
 
     return (
@@ -76,19 +87,22 @@ const Register = () => {
                 <h1 className='display-3 text-center'>Register</h1>
             </Container>
 
-            <CenterItem>
+            <CenterItem md={5}>
                 <Form noValidate validated={validated} onSubmit={checkFormValidity} autoComplete='off'>
 
                     <Form.Group className="mb-3" controlId="formUsername">
                         <Form.Label>Username</Form.Label>
                         <Form.Control type="text" placeholder="Username" required pattern={'^[a-zA-Z\\d]{3,15}$'} />
-                        <Form.Control.Feedback id='usernameFeedback'type="invalid">Username must be 3-15 characters long and contain only letters and numbers</Form.Control.Feedback>
+                        <Form.Control.Feedback id='usernameFeedback' type="invalid">Username must be 3-15 characters long and contain only letters and numbers</Form.Control.Feedback>
                         <Form.Control.Feedback type="valid">Correct name.</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" required pattern={'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&?])[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
+                        <InputGroup className='mb-3'>
+                            <Form.Control type="password" placeholder="Password" required pattern={'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&?])[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
+                            <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img src='/eye_closed.png' width={25} height={25} /></Button>
+                        </InputGroup>
                         <Form.Text id='pswdHelpText' className="text-muted">
                             Password must be between 8-20 characters and must contain: a letter, capital letter, a number and a special character (!@#$%^&?).
                         </Form.Text>
@@ -114,7 +128,7 @@ const Register = () => {
                     </Button>
                 </Form>
             </CenterItem>
-            <RedirectComponent redirect={redirect} address={'/login'}/>
+            <RedirectComponent redirect={redirect} address={'/login'} />
         </>
     );
 }

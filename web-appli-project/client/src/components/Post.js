@@ -7,11 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 
-//import defaultIcon from '/defaultusericon.png';
-
-// CARD
 const Post = ({ id }) => {
-
     return (
         <>
             <Container id='postBody' text='light' style={{ padding: 20, marginTop: 20, backgroundColor: '#1A1C1E', borderRadius: 8 }} >
@@ -63,10 +59,11 @@ const Post = ({ id }) => {
         </>
     )
 }
-
+/*
+ADD EDITING AND DELETING POSSIBILITY HERE
 const NavigationButtons = () => {
-    // ADD EDITING AND DELETING POSSIBILITY HERE
-};
+    
+};*/
 
 const Rating = ({ rating }) => {
     return (

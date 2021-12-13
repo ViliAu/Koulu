@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Helmet from 'react-helmet';
 import Container from "react-bootstrap/Container";
@@ -6,30 +5,17 @@ import Container from "react-bootstrap/Container";
 import MyNavbar from './components/MyNavbar';
 import HomePage from './components/HomePage';
 import Posts from './components/Posts';
-import Post from './components/Post';
-import User from './components/User';
+import Users from './components/Users';
 import Login from './components/Login';
 import Register from './components/Register';
 import NotFound from './components/NotFound';
-import Create from "./components/Create";
+import CreatePost from "./components/CreatePost";
+import UserSettings from "./components/UserSettings";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/androidstudio.css';
 
 function App() {
-  /*
-  const [token, setToken] = useState('');
-  useState(() => {
-    // Event listener for auth token changes
-    function checkUserData() {
-      console.log("HMM AKTO")
-      setToken(localStorage.getItem('auth_token'));
-    }
-    window.addEventListener('storage', checkUserData);
-    return () => {
-      window.removeEventListener('storage', checkUserData);
-    }
-  });*/
   return (
     <Router>
       <Helmet>
@@ -41,10 +27,12 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/posts/:id" element={<Posts />} />
           <Route path="/posts/" element={<Posts />} />
-          <Route path="/user" element={<User />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/:id" element={<Users />} />
+          <Route path="/users/:id/settings" element={<UserSettings />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/create" element={<Create />} />
+          <Route path="/create" element={<CreatePost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>

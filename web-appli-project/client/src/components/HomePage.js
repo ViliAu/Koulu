@@ -1,7 +1,5 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import CenterItem from './CenterItem';
-//import '../styles/HomePageStyle.css';
 
 const HomePage = () => {
     return (

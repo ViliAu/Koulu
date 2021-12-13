@@ -30,6 +30,7 @@ const MyNavbar = () => {
                     // Unauthorized (token may be expired)
                     if (req.status === 401) {
                         setUser(null);
+                        localStorage.removeItem('auth_token');
                     }
                     // Authorized
                     else {
@@ -67,7 +68,7 @@ const MyNavbar = () => {
                             <LinkContainer to='/posts'>
                                 <Nav.Link>Posts</Nav.Link>
                             </LinkContainer>
-                            <LinkContainer to='/user'>
+                            <LinkContainer to='/users'>
                                 <Nav.Link>Users</Nav.Link>
                             </LinkContainer>
                         </Nav>
@@ -99,7 +100,7 @@ const LogInText = ({ user }) => {
         return (
             <Nav>
                 <NavDropdown title={user.name} id="navbarScrollingDropdown">
-                    <LinkContainer to={`/user/${user.name}`}>
+                    <LinkContainer to={`/users/${user.name}`}>
                         <NavDropdown.Item>User</NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to='/posts'>

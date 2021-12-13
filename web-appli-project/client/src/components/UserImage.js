@@ -1,16 +1,21 @@
 import { React, useState, useEffect } from 'react';
 
 const UserImage = ({ alt, id, size, className }) => {
-    const [imgSrc, setImgSrc] = useState('');
+    const [imgSrc, setImgSrc] = useState('/defaultusericon.png');
 
     useEffect(() => {
         let mounted = true;
         async function fetchData() {
+            if (!id || id === 'none') {
+                return;
+            }
             try {
                 const res = await fetch('/api/image/' + id);
                 const imgBlob = await res.blob();
                 if (mounted) {
-                    setImgSrc(imgBlob && res.ok ? URL.createObjectURL(imgBlob) : '/defaultusericon.png');
+                    if (imgBlob && res.ok) {
+                        setImgSrc(URL.createObjectURL(imgBlob));
+                    }
                 }
             }
             catch { }
