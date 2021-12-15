@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/col';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
@@ -60,7 +61,7 @@ const MyNavbar = () => {
                                 height='30'
                                 className='d-inline-block align-top'
                             />{' '}
-                            Coding site
+                            <Col className="d-none d-md-inline-block">Coding site</Col>
                         </Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Collapse>

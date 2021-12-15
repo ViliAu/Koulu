@@ -84,21 +84,21 @@ const Login = () => {
 
             <CenterItem md={5}>
                 <Form noValidate validated={validated} className='loginForm' onSubmit={handleSubmit} autoComplete='off'>
-                    <Form.Group className="mb-3" controlId="formUsername">
+                    <Form.Group className='mb-3' controlId='formUsername'>
                         <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" required pattern={'^[a-zA-Z\\d]{3,15}$'} />
+                        <Form.Control type='text' required pattern={'^[a-zA-Z\\d]{3,15}$'} />
                         <Form.Control.Feedback id='usernameFeedback' type="invalid">Please enter a valid username.</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formPassword">
+                    <Form.Group className='mb-3' controlId='formPassword'>
                         <Form.Label>Password</Form.Label>
                         <InputGroup className='mb-3'>
-                            <Form.Control type="password" required pattern={'[a-zA-Z\\d!@#$%^&?]{1,20}$'} />
-                            <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img src='/eye_closed.png' width={25} height={25} /></Button>
+                            <Form.Control type='password' required pattern={'[a-zA-Z\\d!@#$%^&?]{1,20}$'} />
+                            <Button variant='outline-secondary' id='pswdButton' onClick={changePasswordVisibility}><img alt='' src='/eye_closed.png' width={25} height={25} /></Button>
                         </InputGroup>
-                        <Form.Control.Feedback id='usernameFeedback' type="invalid">Please enter a password.</Form.Control.Feedback>
+                        <Form.Control.Feedback id='usernameFeedback' type='invalid'>Please enter a password.</Form.Control.Feedback>
                     </Form.Group>
-                    <Button variant="primary" type="submit">
+                    <Button variant='primary' type='submit'>
                         Submit
                     </Button>
                     <Form.Text className='text-muted display-3' style={{ marginLeft: '10px' }}>

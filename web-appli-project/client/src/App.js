@@ -11,6 +11,8 @@ import Register from './components/Register';
 import NotFound from './components/NotFound';
 import CreatePost from "./components/CreatePost";
 import UserSettings from "./components/UserSettings";
+import UserPage from "./components/UserPage";
+import PostPage from './components/PostPage'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/androidstudio.css';
@@ -20,15 +22,16 @@ function App() {
     <Router>
       <Helmet>
         <title>Welcome to SITE</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
       </Helmet>
       <MyNavbar />
-      <Container className='App' bg='dark'>
+      <Container className='App'>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/posts/:id" element={<Posts />} />
+          <Route path="/posts/:id" element={<PostPage />} />
           <Route path="/posts/" element={<Posts />} />
           <Route path="/users" element={<Users />} />
-          <Route path="/users/:id" element={<Users />} />
+          <Route path="/users/:id" element={<UserPage />} />
           <Route path="/users/:id/settings" element={<UserSettings />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

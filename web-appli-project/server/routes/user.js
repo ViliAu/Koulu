@@ -8,13 +8,14 @@ const passport = require('passport');
 require('../auth/passport.js')(passport)
 
 // Usernames and passwords can't contain dangerous symbols so they aren't escaped
+// TODO: timeout after x seconds
 router.post('/login',
     body('name').trim().isLength({ min: 3, max: 15 }).matches(/^[a-zA-Z\d]{3,15}$/),
     body('password').isLength({ min: 8, max: 20 }).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&\?])[a-zA-Z\d!@#$%^&\?]{8,20}$/),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ success: false, errors: errors.array() });
+            return res.status(400).json({ success: false, error: 'Invalid form' });
         }
         try {
             const result = await User.findOne({ name: new RegExp(req.body.name, 'i') });
@@ -40,6 +41,7 @@ router.post('/login',
             }
         }
         catch (e) {
+            console.log(e);
             res.status(500).send({ success: false, error: "Something went wrong" });
         }
     });
@@ -50,7 +52,7 @@ router.post('/register',
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ success: false, errors: errors.array() });
+            return res.status(400).json({ success: false, error: 'Invalid form' });
         }
         try {
             const result = await User.findOne({ name: new RegExp(req.body.name, 'i') });
@@ -74,14 +76,17 @@ router.post('/register',
 
 // Returns 1 user if a name query param is passed. Otherwise returns all users
 router.get('/getuser', async (req, res) => {
-    const nameFilter = req.query.name;
+    const { name, id } = req.query;
     try {
         let result;
-        if (nameFilter) {
-            result = await User.findOne({ name: new RegExp(req.query.name, 'i') }, 'name image bio registerDate admin');
+        if (name) {
+            result = await User.findOne({ name: new RegExp(name, 'i') }, '-password');
+        }
+        else if (id) {
+            result = await User.findById(id, '-password');
         }
         else {
-            result = await User.find({}, 'name image bio registerDate admin');
+            result = await User.find({}, '-password');
         }
         if (result) {
             res.json({ success: true, user: result });
@@ -95,9 +100,74 @@ router.get('/getuser', async (req, res) => {
     }
 });
 
+// Route for updating user settings
+router.patch('/updateuser',
+    body('name').trim().isLength({ min: 3, max: 15 }).matches(/^[a-zA-Z\d]{3,15}$/),
+    body('password').matches(/^$|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&?])[a-zA-Z\d!@#$%^&?]{8,20}$/),
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+        const name = req.query.name;
+        // Validate user and check if the updates are valid
+        // Is the user authorized?
+        if (req.user.name !== name) {
+            console.log("Unauthorized");
+            res.status(401).json({ success: false, error: 'Unauthorized' });
+            return;
+        }
+        // Is the form valid?
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors);
+            return res.status(400).json({ success: false, error: 'Invalid form' });
+        }
+        // Is the username taken?
+        if (req.body.name !== req.body.name) {
+            const user = await User.findOne({ name: req.body.name });
+            if (user) {
+                console.log("User already exists");
+                return res.status(400).json({ success: false, error: 'Username is already taken' });
+            }
+        }
+
+        let newUserData = {}
+        if (req.body.name !== req.user.name) {
+            newUserData.name = req.body.name
+        }
+        if (req.body.password) {
+            newUserData.password = await bcrypt.hash(req.body.password, 10);
+        }
+        if (req.body.image !== '') {
+            newUserData.image = req.body.image;
+        }
+        newUserData.bio = req.body.bio;
+
+        try {
+            const updateUser = await User.findOneAndUpdate({name: req.user.name}, newUserData);
+            res.status(200).json({ success: true, error: 'none' });
+        }
+        catch (e) {
+            console.log(e);
+            res.status(500).json({ success: false, error: 'Something went wrong!' });
+        }
+
+    });
+
 // Returns a user object without password on success, otherwise returns a 401 status
+// A name can be passed as well to check validity (for example while changing settings)
 router.get('/authenticate', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    res.status(200).send(req.user);
+    const name = req.query.name;
+    if (name) {
+        if ((req.user.name === name)) {
+            res.status(200).send(req.user);
+        }
+        else {
+            res.status(401).end();
+        }
+    }
+    else {
+        res.status(200).send(req.user);
+    }
+
 });
 
 module.exports = router;

@@ -1,5 +1,6 @@
-import React from 'react';
+import {React, useState, useEffect} from 'react';
 import LinkContainer from 'react-router-bootstrap/LinkContainer';
+import { useParams } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
 import Container from 'react-bootstrap/Container';
@@ -11,9 +12,47 @@ import CenterItem from './CenterItem';
 import UserImage from './UserImage';
 import NotFound from './NotFound';
 
-const UserPage = ({ user }) => {
-    const loggedIn = (localStorage.getItem('auth_token') !== null);
-    console.log(user);
+const UserPage = () => {
+    const [loggedIn, setLoggedIn] = useState(false);
+    
+    const [user, setUser] = useState(null);
+    const { id } = useParams();
+    // Get user on load
+    useEffect(() => {
+        let mounted = true;
+        // Get user data from backend API
+        async function fetchUserData() {
+            try {
+                // Get user data
+                let req = await fetch(`/api/user/getuser?name=${id}`);
+                const data = await req.json();
+                let authData = {};
+                try {
+                    req = await fetch(`/api/user/authenticate?name=${id}`, {
+                        method: 'GET',
+                        headers: { 'authorization': 'Bearer ' + localStorage.getItem('auth_token') }
+                    });
+                    authData = await req.json();
+                }
+                catch {}
+                // Get auth
+                if (mounted) {
+                    if (data.success) {
+                        setUser(data.user);
+                        setLoggedIn(authData.name === id)
+                    }
+                }
+            }
+            catch { }
+        }
+        if (id) {
+            fetchUserData();
+        }
+        return () => {
+            mounted = false;
+        }
+    }, [id]);
+
     if (user) {
         return (
             <CenterItem>
@@ -26,19 +65,19 @@ const UserPage = ({ user }) => {
                         </Col>
                         <Col></Col>
                         <Col xs={'auto'}>
-                            {loggedIn ?
+                            {loggedIn &&
                                 <LinkContainer to={'settings'} style={{ marginBottom: 10 }}>
                                     <Button>{`⚙ Edit profile`}</Button>
-                                </LinkContainer> : <></>}
+                                </LinkContainer>}
                         </Col>
                     </Row>
                     <Container className='text-center' style={{ marginTop: 20 }}>
                         <Container style={{ padding: 20 }}>
-                            <UserImage size={128} />
+                            <UserImage id={user.image} size={128} />
                         </Container>
                         <h1 className='display-3'>{user.name}</h1>
                         <hr/>
-                        {(user.bio && user.bio.trim().length === 0) ? <p>{user.bio}</p> : <p className='text-muted'><i>User has no bio</i></p>}
+                        {(user.bio.trim().length > 0) ? <p>{user.bio}</p> : <p className='text-muted'><i>User has no bio</i></p>}
                         <hr/>
                         <small className='text-muted'>Registered on {DateTime.fromISO(user.registerDate).toLocaleString(DateTime.DATETIME_MED)}</small>
                     </Container>

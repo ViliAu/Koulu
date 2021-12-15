@@ -55,9 +55,7 @@ const Register = () => {
             }
         }
         else {
-            if (validated) {
-                setRedirect(true);
-            }
+            setRedirect('/login');
         }
     }
 
@@ -101,7 +99,7 @@ const Register = () => {
                         <Form.Label>Password</Form.Label>
                         <InputGroup className='mb-3'>
                             <Form.Control type="password" placeholder="Password" required pattern={'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&?])[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
-                            <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img src='/eye_closed.png' width={25} height={25} /></Button>
+                            <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img alt=''  src='/eye_closed.png' width={25} height={25} /></Button>
                         </InputGroup>
                         <Form.Text id='pswdHelpText' className="text-muted">
                             Password must be between 8-20 characters and must contain: a letter, capital letter, a number and a special character (!@#$%^&?).
@@ -112,7 +110,6 @@ const Register = () => {
                         <Form.Control.Feedback type='valid'>
                             Password must be between 8-20 characters and must contain: a letter, capital letter, a number and a special character (!@#$%^&?).
                         </Form.Control.Feedback>
-
 
                     </Form.Group>
 
@@ -128,7 +125,7 @@ const Register = () => {
                     </Button>
                 </Form>
             </CenterItem>
-            <RedirectComponent redirect={redirect} address={'/login'} />
+            <RedirectComponent redirect={redirect} />
         </>
     );
 }

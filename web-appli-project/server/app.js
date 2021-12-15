@@ -9,12 +9,15 @@ const cors = require('cors');
 const passport = require('passport');
 
 // Init mongoose
-const mongoDB = "mongodb://localhost:27017/projectdb";
-mongoose.connect(mongoDB);
-mongoose.Promise = Promise;
-const db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "MongoDB connection error"));
+const initDB = async () => {
+    mongoose.Promise = Promise;
+    await mongoose.connect('mongodb://localhost:27017/projectdb', {
+        connectTimeoutMS: 1000
+    });
+    const db = mongoose.connection;
+    db.on("error", console.error.bind(console, "MongoDB connection error"));
+}
+initDB();
 
 const app = express();
 
@@ -26,6 +29,8 @@ app.use(passport.initialize());
 
 // API routes
 app.use('/api/user', require('./routes/user'));
+app.use('/api/image', require('./routes/image'));
+app.use('/api/post', require('./routes/post'));
 
 // Enable cors
 if (process.env.NODE_ENV === "production") {

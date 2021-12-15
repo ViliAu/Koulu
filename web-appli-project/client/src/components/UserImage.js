@@ -34,6 +34,7 @@ const UserImage = ({ alt, id, size, className }) => {
                 width={size}
                 height={size}
                 className={className}
+                style={{borderRadius: '50%'}}
             />
         </div>
     )
