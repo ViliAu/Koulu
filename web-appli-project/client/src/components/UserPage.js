@@ -29,11 +29,15 @@ const UserPage = () => {
                 const data = await req.json();
                 let authData = {};
                 try {
-                    req = await fetch(`/api/user/authenticate?name=${id}`, {
+                    let authRreq = await fetch(`/api/user/authenticate?name=${id}`, {
                         method: 'GET',
                         headers: { 'authorization': 'Bearer ' + localStorage.getItem('auth_token') }
                     });
                     authData = await req.json();
+                    // Token expired => delete it
+                    if (authRreq.status === 401) {
+                        localStorage.removeItem('auth_token');
+                    }
                 }
                 catch { }
                 // Get auth

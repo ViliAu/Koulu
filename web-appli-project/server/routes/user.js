@@ -18,7 +18,7 @@ router.post('/login',
             return res.status(400).json({ success: false, error: 'Name or password contains incorrect characters.' });
         }
         try {
-            const result = await User.findOne({ name: new RegExp(req.body.name, 'i') });
+            const result = await User.findOne({ name: new RegExp('^'+ req.body.name + '$', "i") });
             if (result) {
                 if (await bcrypt.compare(req.body.password, result.password)) {
                     const token = await jwt.sign(
@@ -28,7 +28,7 @@ router.post('/login',
                         },
                         process.env.SECRET,
                         {
-                            expiresIn: '15min'
+                            expiresIn: '1h'
                         });
                     res.status(200).json({ success: true, token });
                 }
@@ -46,17 +46,21 @@ router.post('/login',
         }
     });
 
+// Route for registering a user
 router.post('/register',
     body('name').trim().isLength({ min: 3, max: 15 }).matches(/^[a-zA-Z\d]{3,15}$/),
-    body('password').isLength({ min: 8, max: 20 }).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&\?])[a-zA-Z\d!@#$%^&\?]{8,20}$/),
+    body('password').isLength({ min: 8, max: 20 }).matches(/^$|^((?=.*[a-z])(?=.*[A-Z])|(?=.*\d)|(?=.*[!@#$%^&?]))[a-zA-Z\d!@#$%^&?]{8,20}$/),
     async (req, res) => {
+        // Validate form
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ success: false, error: 'Invalid form' });
         }
         try {
-            const result = await User.findOne({ name: new RegExp(req.body.name, 'i') });
+            // Check if a user already exists with the name
+            const result = await User.findOne({ name: new RegExp('^'+ req.body.name + '$', "i") });
             if (!result) {
+                // Hash the password so that no plain passwords are stored in the db
                 const hash = await bcrypt.hash(req.body.password, 10);
                 await new User({
                     name: req.body.name,
@@ -74,13 +78,13 @@ router.post('/register',
         }
     });
 
-// Returns 1 user if a name query param is passed. Otherwise returns all users
+// Returns 1 user if a name or id query param is passed. Otherwise returns all users
 router.get('/getuser', async (req, res) => {
     const { name, id } = req.query;
     try {
         let result;
         if (name) {
-            result = await User.findOne({ name: new RegExp(name, 'i') }, '-password');
+            result = await User.findOne({ name: new RegExp('^'+ req.body.name + '$', "i") }, '-password');
         }
         else if (id) {
             result = await User.findById(id, '-password');
@@ -103,7 +107,7 @@ router.get('/getuser', async (req, res) => {
 // Route for updating user settings
 router.patch('/updateuser',
     body('name').trim().isLength({ min: 3, max: 15 }).matches(/^[a-zA-Z\d]{3,15}$/),
-    body('password').matches(/^$|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&?])[a-zA-Z\d!@#$%^&?]{8,20}$/),
+    body('password').matches(/^$|^((?=.*[a-z])(?=.*[A-Z])|(?=.*\d)|(?=.*[!@#$%^&?]))[a-zA-Z\d!@#$%^&?]{8,20}$/),
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
         const {id} = req.query;

@@ -134,7 +134,6 @@ const Comment = ({ comment, user }) => {
                                 <Col xs={'auto'} style={{ marginRight: -15 }}>
                                 <Link to={'/users/' + author.name} style={{ textDecoration: 'none', color: 'rgb(240, 240, 240)' }}><UserImage user={author} size={25} className={'align-top'} includeName /></Link>
                                 </Col>
-                                <Col xs={'auto'}>{author.name}</Col>
                                 <Col></Col>
                                 <Col xs={'auto'}>
                                     <p className='text-muted align-bottom' id='postTimestamp' style={{ fontSize: 12 }}>Last edited: {DateTime.fromISO(comment.lastEdited).toLocaleString(DateTime.DATETIME_MED)}</p>

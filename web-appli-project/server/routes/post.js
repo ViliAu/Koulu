@@ -20,7 +20,8 @@ router.get('/preview', async (req, res) => {
             postArray = await Post.find({ author: author }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
         else if (title) {
-            postArray = await Post.find({ title: new RegExp(title, 'i') }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
+            // Filter posts by title and body (exclusive)
+            postArray = await Post.find({$or: [{title: new RegExp(title, 'i') }, {text: new RegExp(title, 'i') }]}, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
         else {
             postArray = await Post.find({}, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();

@@ -102,18 +102,12 @@ const Register = () => {
                     <Form.Group className="mb-3" controlId="formPassword">
                         <Form.Label>Password</Form.Label>
                         <InputGroup className='mb-3'>
-                            <Form.Control type="password" placeholder="Password" required pattern={'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&?])[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
+                            <Form.Control type="password" placeholder="Password" required pattern={'^((?=.*[a-z])(?=.*[A-Z])|(?=.*\\d)|(?=.*[!@#$%^&?]))[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
                             <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img alt=''  src='/eye_closed.png' width={25} height={25} /></Button>
                         </InputGroup>
-                        <Form.Text id='pswdHelpText' className="text-muted">
-                            Password must be between 8-20 characters and must contain: a letter, capital letter, a number and a special character (!@#$%^&?).
+                        <Form.Text className="text-muted">
+                            Password must be between 8-20 characters and must contain a capital letter or a number or a special character (!@#$%^&?).
                         </Form.Text>
-                        <Form.Control.Feedback type='invalid'>
-                            Password must be between 8-20 characters and must contain: a letter, capital letter, a number and a special character (!@#$%^&?).
-                        </Form.Control.Feedback>
-                        <Form.Control.Feedback type='valid'>
-                            Password must be between 8-20 characters and must contain: a letter, capital letter, a number and a special character (!@#$%^&?).
-                        </Form.Control.Feedback>
 
                     </Form.Group>
 

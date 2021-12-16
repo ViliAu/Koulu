@@ -41,6 +41,9 @@ const Post = () => {
                     });
                     userData = await req.json();
                     setUser(userData);
+                    if (req.status === 401) {
+                        localStorage.removeItem('auth_token');
+                    }
                 }
                 catch { }
 
