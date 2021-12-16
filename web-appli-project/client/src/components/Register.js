@@ -19,6 +19,7 @@ const Register = () => {
 
     let pswdVisible = false;
 
+    // Handles the validation and data sending after the form has been submitted
     const checkFormValidity = async (event) => {
         // Prevent page reload and default html validation
         event.preventDefault();
@@ -58,16 +59,19 @@ const Register = () => {
                 setShowAlert(true);
             }
         }
+        // Success
         else {
             setRedirect('/login');
         }
     }
 
+    // Updates the password matching string (for the confirm password field)
     const updatePassword = (event) => {
         const pswd = event.currentTarget;
         setPassword(pswd.value);
     }
 
+    // Toggles password field between plaintext and password
     const changePasswordVisibility = () => {
         pswdVisible = !pswdVisible;
         document.getElementById('formPassword').type = pswdVisible ? 'text' : 'password';

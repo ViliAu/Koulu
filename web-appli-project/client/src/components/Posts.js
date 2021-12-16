@@ -14,16 +14,18 @@ const Posts = () => {
     // Get query string
     const query = window.location.search;
 
+    // Get all post previews
     useEffect(() => {
         let mounted = true;
-        // Get user data from backend API
+        // Get post data from backend API
         async function fetchPosts() {
             try {
                 const req = await fetch(`/api/post/preview` + query);
                 const data = await req.json();
                 if (mounted) {
+                    // Map posts into nice preview cards
                     if (req.ok) {
-                        setPosts(data.previews.map((post) => <PostPreview key={post.id} post={post} />))
+                        setPosts(data.previews.map((post) => <PostPreview key={post._id} post={post} />))
                     }
                 }
             }

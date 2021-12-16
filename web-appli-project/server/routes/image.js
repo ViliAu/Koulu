@@ -4,6 +4,7 @@ const multer = require('multer');
 const upload = multer();
 const router = express.Router();
 
+// Returns a image blob to the client based on the imageId param
 router.get('/:imageId', async (req, res) => {
     try {
         const img = await Image.findById(req.params.imageId);
@@ -22,6 +23,7 @@ router.get('/:imageId', async (req, res) => {
     }
 })
 
+// Saves image to the database using multer. Takes the image from formdata
 router.post('/', upload.single('image'), async (req, res) => {
     if (req.file === null) {
         res.status(400).end;

@@ -11,8 +11,16 @@ import LoadingSpinner from './LoadingSpinner';
 
 const PostPreview = ({post}) => {
     const [author, setAuthor] = useState(null);
+    // Shorten the post text to be up most 150 characters long
     const textPreview = post.text.substring(0, 150) + (post.text.substring(0, 150).length === 150 ? '...' : '');
+    console.log(post)
+    // Calculate post rating
+    let rating = 0;
+    for (let r of post.ratings) {
+        rating += r.rating;
+    }
 
+    // Get user data to show in the preview
     useEffect(() => {
         let mounted = true;
         // Get user data from backend API
@@ -33,15 +41,16 @@ const PostPreview = ({post}) => {
             mounted = false;
         }
     }, [post]);
+
     if (author) {
         return (
-            <Link to={post.id} style={{ textDecoration: 'none' }}>
+            <Link to={post._id} style={{ textDecoration: 'none' }}>
                 <Card bg='dark' variant='dark' text='light' border='secondary'>
                     <Card.Header>{post.title}</Card.Header>
                     <Card.Body>
                         <Row>
                             <Col xs={'auto'}>
-                                <div className='text-center'>{post.likes}</div>
+                                <div className='text-center'>{rating}</div>
                                 <div className='text-center' style={{ fontSize: 10 }}>rating</div>
                             </Col>
                             <Col>{textPreview}</Col>

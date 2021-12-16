@@ -152,6 +152,7 @@ const UserSettings = () => {
         catch { }
     }
 
+    // Uploads the user image to image backend api
     const uploadImage = async () => {
         let file = document.getElementById("formImage").files[0];
         if (!file) {

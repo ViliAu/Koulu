@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'
 
 const Rating = ({ user, rating, userRating, id }) => {
 
+    // Handle the rating button click
     const handleRating = async (event) => {
         let rating = event.target.id;
         if (rating === userRating) {
@@ -13,6 +14,7 @@ const Rating = ({ user, rating, userRating, id }) => {
         if (!id) {
             return;
         }
+        // Update the post/comments rating
         try {
             let ratingData = {};
             ratingData.rating = rating;
@@ -22,6 +24,8 @@ const Rating = ({ user, rating, userRating, id }) => {
                 body: JSON.stringify(ratingData)
             });
             const data = await req.json();
+
+            // Update the data for the client by reloading the whole page due to time constraints
             if (data.success) {
                 window.location.reload();
             }
@@ -29,7 +33,7 @@ const Rating = ({ user, rating, userRating, id }) => {
                 alert(data.error);
             }
         }
-        catch (e){
+        catch (e) {
             console.log(e);
         }
     };

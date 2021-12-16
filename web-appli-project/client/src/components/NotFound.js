@@ -12,7 +12,7 @@ const NotFound = () => {
             <CenterItem>
                 <img
                     alt=''
-                    src='/logo192.png'
+                    src='/logo.svg'
                 />
             </CenterItem>
             <h1>404 - Site doesn't exist<br/><a href='/'>Home</a></h1>

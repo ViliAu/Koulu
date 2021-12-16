@@ -7,20 +7,25 @@ const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 require('../auth/passport.js')(passport)
 
+// Route for logging in
 // Usernames and passwords can't contain dangerous symbols so they aren't escaped
-// TODO: timeout after x seconds
 router.post('/login',
     body('name').trim().matches(/^[a-zA-Z\d]{0,15}$/),
     body('password').matches(/^admin$|^[a-zA-Z\d!@#$%^&\?]{0,20}$/),
     async (req, res) => {
+        // Check form validation
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ success: false, error: 'Name or password contains incorrect characters.' });
         }
         try {
+            // Check for a case insensitive match in the database
             const result = await User.findOne({ name: new RegExp('^'+ req.body.name + '$', "i") });
+            //Found a match
             if (result) {
+                // Compare pswd
                 if (await bcrypt.compare(req.body.password, result.password)) {
+                    // Valid credentials => Write a token for 1h and send it to the client
                     const token = await jwt.sign(
                         {
                             id: result._id,
@@ -78,17 +83,20 @@ router.post('/register',
         }
     });
 
-// Returns 1 user if a name or id query param is passed. Otherwise returns all users
+// Returns a single user if a name or id query param is passed. Otherwise returns all users
 router.get('/getuser', async (req, res) => {
     const { name, id } = req.query;
     try {
         let result;
+        // Find by name (case insensitive)
         if (name) {
             result = await User.findOne({ name: new RegExp('^'+ name + '$', "i") }, '-password');
         }
+        // Find by id
         else if (id) {
             result = await User.findById(id, '-password');
         }
+        // Find all users
         else {
             result = await User.find({}, '-password');
         }
@@ -133,6 +141,7 @@ router.patch('/updateuser',
             }
         }
 
+        // Construct a update object from the given data
         let newUserData = {}
         if (req.body.name !== req.user.name) {
             newUserData.name = req.body.name
@@ -145,8 +154,9 @@ router.patch('/updateuser',
         }
         newUserData.bio = req.body.bio;
 
+        // Update the user to datavase
         try {
-            await User.findOneAndUpdate({name: req.user.name}, newUserData);
+            await User.findOneAndUpdate({name: req.user.name}, newUserData).exec();
             res.status(200).json({ success: true});
         }
         catch (e) {
@@ -161,9 +171,11 @@ router.patch('/updateuser',
     });
 
 // Returns a user object on success, otherwise returns a 401 status
-// A name can be passed as well to check validity (for example while changing settings)
+// A name or id can be passed as well to check validity (for example if we want to prevent the rendering of certain sites)
+// An admin user, can however, bypass this
 router.get('/authenticate', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const {name, id} = req.query;
+    // Auth by name
     if (name) {
         if ((req.user.admin || req.user.name === name)) {
             return res.status(200).send(req.user);
@@ -172,6 +184,7 @@ router.get('/authenticate', passport.authenticate('jwt', { session: false }), as
             return res.status(401).end();
         }
     }
+    // Auth by id
     else if (id) {
         if ((req.user.admin || req.user._id.equals(id))) {
             return res.status(200).send(req.user);
@@ -180,12 +193,14 @@ router.get('/authenticate', passport.authenticate('jwt', { session: false }), as
             return res.status(401).end();
         }
     }
+    // Auth
     else {
         return res.status(200).send(req.user);
     }
 
 });
 
+// Get the amount of users in the db
 router.get('/amount', async (req, res) => {
     try {
         const u = await User.find({});

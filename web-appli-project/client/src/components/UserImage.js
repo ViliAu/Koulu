@@ -1,8 +1,10 @@
 import { React, useState, useEffect } from 'react';
 
+// Wrapper component for nice-looking user pictures
 const UserImage = ({ user, size, className, includeName }) => {
     const [imgSrc, setImgSrc] = useState('/defaultusericon.png');
 
+    // Get picture data
     useEffect(() => {
         let mounted = true;
         async function fetchData() {

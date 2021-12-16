@@ -14,6 +14,7 @@ const Create = () => {
     const [validated, setValidated] = useState(false);
     const [redirect, setRedirect] = useState('');
 
+    // Update the preview text and code snippet box
     const updateCode = () => {
         const codetextBox = document.getElementById('formCode');
         // Resize text box
@@ -26,10 +27,12 @@ const Create = () => {
         setCode(codeString);
     }
 
+    // Toggle between preview and input
     const renderPreview = (eventkey) => {
         setPreview(eventkey !== '1');
     }
 
+    // Handles form submitting
     const handleSubmit = async (event) => {
         event.preventDefault();
         // First, check validity locally, then post data and check validity on backend
@@ -65,11 +68,11 @@ const Create = () => {
                 alert(data.error);
             }
             event.stopPropagation();
-            setValidated(true);
+            setValidated(false);
             return;
         }
 
-        // Save token to localstorage
+        // reload window to apply changes
         else {
             setRedirect('/posts/' + data.id);
         }

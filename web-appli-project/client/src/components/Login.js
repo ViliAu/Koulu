@@ -16,6 +16,7 @@ const Login = () => {
 
     let pswdVisible = false;
 
+    // Handles the validation and data sending after form has been submitted
     const handleSubmit = async (event) => {
         event.preventDefault();
         // First, check validity locally, then post data and check validity on backend
@@ -63,13 +64,13 @@ const Login = () => {
         }
     }
 
+    // Toggles the password between plaintext and password
     const changePasswordVisibility = () => {
         pswdVisible = !pswdVisible;
         document.getElementById('formPassword').type = pswdVisible ? 'text' : 'password';
         const pswdBtn = document.getElementById('pswdButton');
         pswdBtn.querySelector('img').src = pswdVisible ? '/eye.svg' : '/eye_closed.svg';
     }
-
 
     return (
         <>
@@ -112,4 +113,4 @@ const Login = () => {
         </>
     );
 }
-export default Login
+export default Login;

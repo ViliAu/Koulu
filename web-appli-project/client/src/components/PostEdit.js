@@ -22,7 +22,7 @@ const PostEdit = () => {
 
     const { id } = useParams();
 
-    // Fetch and setup post data
+    // Get user from authentication api so that the view is not visible to non-auth and wrong people
     useEffect(() => {
         let mounted = true;
         async function fetchPost() {
@@ -57,6 +57,7 @@ const PostEdit = () => {
         }
     }, [id]);
 
+    // Update the preview text and code snippet box
     const updateCode = () => {
         const codetextBox = document.getElementById('formCode');
         // Resize text box

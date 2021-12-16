@@ -11,36 +11,22 @@ const { body, validationResult } = require('express-validator');
 // Returns post previews based on url query string filters
 router.get('/preview', async (req, res) => {
     const { author, title } = req.query;
-
-    // Get posts with given data
+    // Get posts with given query filters
     try {
         let postArray = [];
-        let postObjects = [];
+        // Filter posts by author
         if (author) {
             postArray = await Post.find({ author: author }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
+        // Filter posts by title and body (exclusive)
         else if (title) {
-            // Filter posts by title and body (exclusive)
             postArray = await Post.find({$or: [{title: new RegExp(title, 'i') }, {text: new RegExp(title, 'i') }]}, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
+        // Return all posts
         else {
             postArray = await Post.find({}, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
-        for (post of postArray) {
-            let rating = 0;
-            for (let like of post.ratings) {
-                rating += like.rating;
-            }
-            postObjects.push({
-                id: post._id,
-                title: post.title,
-                text: post.text,
-                author: post.author,
-                likes: rating,
-                lastEdited: post.lastEdited
-            })
-        }
-        res.status(200).json({ success: true, previews: postObjects });
+        res.status(200).json({ success: true, previews: postArray });
     }
     catch (e) {
         console.log(e);
@@ -49,7 +35,7 @@ router.get('/preview', async (req, res) => {
 
 });
 
-// Returns a post with all comments to the client
+// Returns a post with all comments to the client and calculate the posts rating
 router.get('/postdata', async (req, res) => {
     const { id } = req.query;
     try {
@@ -66,6 +52,7 @@ router.get('/postdata', async (req, res) => {
             }
             fetchedComments.push(commentObj)
         }
+        // Calculate rating
         let rating = 0;
         for (like of post.ratings) {
             rating += like.rating;
@@ -78,14 +65,17 @@ router.get('/postdata', async (req, res) => {
     }
 });
 
+// Route for uploading a post. Requires auth.
 router.post('/',
     body('title').trim().isLength({ min: 1, max: 50 }).escape(),
     body('text').isLength({ min: 1 }).escape(),
     passport.authenticate('jwt', { session: false }), async (req, res) => {
+        // Validate post form
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ success: false, error: "Post title and body cannot be empty." });
         }
+        // Upload post to database
         try {
             const newPost = await new Post({
                 title: req.body.title,
@@ -101,21 +91,26 @@ router.post('/',
         }
     });
 
+// Deletes a post from database
 router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const { id } = req.query;
     try {
+        // Check if the id is a post id
         let post = await Post.findById(id).exec();
         if (post) {
             // Check authorization
             if (!req.user.admin && !post.author.equals(req.user._id)) {
                 return res.status(401).send({ success: false, error: "Unauthorized" });
             }
+            // Check if the post has any comments and delete them
             for (comment of post.comments) {
                 await Comment.findByIdAndDelete(comment._id).exec();
             }
             await Post.findByIdAndDelete(id).exec();
             return res.status(200).json({success: true});
-        }  
+        }
+
+        // Check if the id is a comment id instead
         else {
             post = await Comment.findById(id).exec();
             if (post) {
@@ -170,13 +165,14 @@ router.post('/comment',
         }
     });
 
-// Adds a ratings to a post or a comment
+// Adds a rating to a post or a comment
 router.put('/rate', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const { id } = req.query;
     if (req.body.rating === null || req.body.rating < -1 || req.body.rating > 1) {
         return res.status(400).json({ success: false, error: "Bad request" });
     }
     try {
+        // Check if the rated thing is a post
         let post = await Post.findById(id).exec();
         if (post) {
             // Clear previous ratings and update with the new one
@@ -184,6 +180,7 @@ router.put('/rate', passport.authenticate('jwt', { session: false }), async (req
             await Post.findByIdAndUpdate(id, { $push: { ratings: { author: req.user._id, rating: req.body.rating } } }).exec();
             res.status(200).json({ success: true });
         }
+        // Check if the rated thing is a comment
         else {
             post = await Comment.findById(id).exec();
             if (post) {
@@ -203,6 +200,7 @@ router.put('/rate', passport.authenticate('jwt', { session: false }), async (req
     }
 });
 
+// Route for editing a post
 router.patch('/edit',
     body('title').trim().isLength({ min: 1, max: 50 }).escape(),
     body('text').isLength({ min: 1 }).escape(),
@@ -216,9 +214,9 @@ router.patch('/edit',
         }
 
         try {
-            // Try to find the edited post
-            let post = await Post.findById(id);
             const date = new Date().toISOString();
+            // Check if the edited thing is a post
+            let post = await Post.findById(id);
             if (post) {
                 // Check authorization
                 if (!req.user.admin && !post.author.equals(req.user._id)) {
@@ -234,6 +232,8 @@ router.patch('/edit',
                     res.json({ success: true });
                 }
             }
+
+            // Check if the edited thing is a comment instead
             else {
                 post = await Comment.findById(id);
                 if (post) {
@@ -261,6 +261,7 @@ router.patch('/edit',
         }
     });
 
+// Get the amount of posts in the database
 router.get('/amount', async (req, res) => {
     try {
         const p = await Post.find({});

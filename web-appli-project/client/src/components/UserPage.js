@@ -17,7 +17,8 @@ const UserPage = () => {
     const [loggedIn, setLoggedIn] = useState(true);
     const [user, setUser] = useState(null);
     const { id } = useParams();
-    // Get user on load
+
+    // This func gets user on page load
     useEffect(() => {
         let mounted = true;
         // Get user data from backend API
@@ -33,14 +34,14 @@ const UserPage = () => {
                         headers: { 'authorization': 'Bearer ' + localStorage.getItem('auth_token') }
                     });
                     authData = await authReq.json();
-                    // Token expired => delete it
+                    // Token expired => delete it from localstorage
                     if (authReq.status === 401) {
                         localStorage.removeItem('auth_token');
                         setLoggedIn(false);
                     }
                 }
                 catch { }
-                // Get auth
+                // Save user info and check if we're the same user in the page
                 if (mounted) {
                     if (data.success) {
                         setUser(data.user);

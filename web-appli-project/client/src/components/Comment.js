@@ -16,6 +16,8 @@ const Comment = ({ comment, user }) => {
     const [editing, setEditing] = useState(false);
     const [validated, setValidated] = useState(false);
     const [author, setAuthor] = useState(null);
+
+    // Calculate comment rating and check user rating
     let userRating = 0;
     let rating = 0;
     for (let r of comment.ratings) {
@@ -91,6 +93,7 @@ const Comment = ({ comment, user }) => {
             return;
         }
 
+        // Reload window to apply updates due to time constraints
         else {
             window.location.reload();
         }

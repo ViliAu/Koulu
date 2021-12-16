@@ -41,6 +41,7 @@ const Post = () => {
                     });
                     userData = await req.json();
                     setUser(userData);
+                    // Expired token => remove it
                     if (req.status === 401) {
                         localStorage.removeItem('auth_token');
                     }
@@ -52,7 +53,8 @@ const Post = () => {
 
                 const authorReq = await fetch(`/api/user/getuser?id=${postData.post.author}`);
                 const authorData = await authorReq.json();
-
+                
+                // Setup post, ratings and user data
                 if (mounted) {
                     if (postReq.ok) {
                         setPost(postData.post);
