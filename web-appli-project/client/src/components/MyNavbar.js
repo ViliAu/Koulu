@@ -12,6 +12,12 @@ import LinkContainer from 'react-router-bootstrap/LinkContainer'
 
 const MyNavbar = () => {
     const [user, setUser] = useState(null);
+
+    const handleSearch = (event) => {
+        event.preventDefault();        
+        window.location = '/posts?title=' + document.getElementById('searchBox').value
+    }
+
     // Get user data from the server with the stored auth_token and set it to user var
     useEffect(() => {
         let mounted = true;
@@ -73,14 +79,15 @@ const MyNavbar = () => {
                                 <Nav.Link>Users</Nav.Link>
                             </LinkContainer>
                         </Nav>
-                        <Form className='d-flex' style={{ paddingRight: 10 }}>
+                        <Form className='d-flex' onSubmit={handleSearch} style={{ paddingRight: 10 }}>
                             <FormControl
                                 type='search'
                                 placeholder="Search for posts..."
                                 className='me-2'
                                 aria-label='Search'
+                                id='searchBox'
                             />
-                            <Button variant='outline-success'>Search</Button>
+                            <Button variant='outline-success' type='submit' className="d-none d-md-inline-block">Search</Button>
                         </Form>
                         <LogInText user={user} />
                     </Navbar.Collapse>
@@ -104,7 +111,7 @@ const LogInText = ({ user }) => {
                     <LinkContainer to={`/users/${user.name}`}>
                         <NavDropdown.Item>User</NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to='/posts'>
+                    <LinkContainer to={`/posts?author=${user._id}`}>
                         <NavDropdown.Item>Posts</NavDropdown.Item>
                     </LinkContainer>
                     <NavDropdown.Divider />

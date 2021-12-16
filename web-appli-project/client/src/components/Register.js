@@ -10,8 +10,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 const Register = () => {
     const [validated, setValidated] = useState(false);
-    const [redirect, setRedirect] = useState(false);
-    const [password, setPassword] = useState(false);
+    const [redirect, setRedirect] = useState('');
+    const [password, setPassword] = useState('');
 
     let pswdVisible = false;
 

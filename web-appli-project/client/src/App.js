@@ -13,6 +13,7 @@ import CreatePost from "./components/CreatePost";
 import UserSettings from "./components/UserSettings";
 import UserPage from "./components/UserPage";
 import PostPage from './components/PostPage'
+import PostEdit from "./components/PostEdit";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/androidstudio.css';
@@ -29,6 +30,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/posts/:id" element={<PostPage />} />
+          <Route path="/posts/:id/edit" element={<PostEdit />} />
           <Route path="/posts/" element={<Posts />} />
           <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<UserPage />} />

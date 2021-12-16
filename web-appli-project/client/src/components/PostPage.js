@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import LinkContainer from 'react-router-bootstrap/LinkContainer';
+import Helmet from 'react-helmet';
 
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
@@ -15,6 +16,7 @@ import Highlight from "react-highlight";
 import CommentForm from './CommentForm'
 import Comment from './Comment';
 import Rating from './Rating';
+import { Link } from 'react-router-dom';
 
 const Post = () => {
     const [user, setUser] = useState(null);
@@ -31,16 +33,16 @@ const Post = () => {
         async function fetchPost() {
             try {
                 // Get user from token
-                let userData = null;;
+                let userData = null;
                 try {
-                    const req = await fetch(`/api/user/authenticate?id=${id}`, {
+                    const req = await fetch('/api/user/authenticate', {
                         method: 'GET',
                         headers: { 'authorization': 'Bearer ' + localStorage.getItem('auth_token') }
                     });
                     userData = await req.json();
                     setUser(userData);
                 }
-                catch {}
+                catch { }
 
                 const postReq = await fetch(`/api/post/postdata?id=${id}`);
                 const postData = await postReq.json();
@@ -54,13 +56,14 @@ const Post = () => {
                         setPostRating(postData.rating);
                         setAuthor(authorData.user);
                         setComments(postData.comments.map((comment =>
-                            <Comment key={comment._id} comment={comment} />
+                            <Comment key={comment._id} comment={comment} user={userData} />
                         )));
-                        console.log(userData)
-                        for (let r of postData.post.ratings) {
-                            if (r.author === userData._id) {
-                                setUserRating(r.rating);
-                                break;
+                        if (userData) {
+                            for (let r of postData.post.ratings) {
+                                if (r.author === userData._id) {
+                                    setUserRating(r.rating);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -74,32 +77,24 @@ const Post = () => {
         }
     }, [id]);
 
-    const getUserFromToken = async () => {
-        let authData = {};
-        try {
-            const req = await fetch(`/api/user/authenticate?id=${id}`, {
-                method: 'GET',
-                headers: { 'authorization': 'Bearer ' + localStorage.getItem('auth_token') }
-            });
-            authData = await req.json();
-            setUser(authData);
-            return authData;
-        }
-        catch {
-            return null;
-        }
-    }
-
     if (post && author) {
         return (
             <Container>
+                <Helmet>
+                    <title>Posts</title>
+                </Helmet>
                 <Container id='postBody' text='light' style={{ padding: 20, marginTop: 20, backgroundColor: '#1A1C1E', borderRadius: 8 }} >
-                    <Row xs={'auto'}>
+                    <Row>
                         <Col>
                             <LinkContainer to={'/posts'} style={{ marginBottom: 10 }}>
                                 <Button >{`← Back`}</Button>
                             </LinkContainer>
                         </Col>
+                        <Col></Col>
+                        <Col xs={'auto'}>
+                            {(user && (user._id === author._id || user.admin)) && <LinkContainer to={'edit'} style={{ marginBottom: 10 }}>
+                                <Button >{`✎ Edit/Delete post`}</Button>
+                            </LinkContainer>}</Col>
                     </Row>
                     <Row>
                         <Col>
@@ -107,9 +102,8 @@ const Post = () => {
                             <Row>
                                 <Col xs={'auto'} style={{ marginRight: -15 }}>{'By:  '}</Col>
                                 <Col xs={'auto'} style={{ marginRight: -15 }}>
-                                    <UserImage id={author.image} size={25} className={'align-top'} />{' '}
+                                    <Link to={'/users/' + author.name} style={{ textDecoration: 'none', color: 'rgb(240, 240, 240)' }}><UserImage user={author} size={25} className={'align-top'} includeName /></Link>
                                 </Col>
-                                <Col xs={'auto'}>{author.name}</Col>
                                 <Col></Col>
                                 <Col xs={'auto'}>
                                     <p className='text-muted align-bottom' id='postTimestamp' style={{ fontSize: 12 }}>Last edited: {DateTime.fromISO(post.lastEdited).toLocaleString(DateTime.DATETIME_MED)}</p>
@@ -119,10 +113,10 @@ const Post = () => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={'auto'}>
-                            <Rating rating={postRating} userRating={userRating} id={id} />
+                        <Col xs={'auto'} className='d-block'>
+                            <Rating user={user} rating={postRating} userRating={userRating} id={id} />
                         </Col>
-                        <Col>
+                        <Col className='d-block'>
                             <Container id='postBody'>
                                 {post.text}
                             </Container>

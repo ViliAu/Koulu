@@ -52,7 +52,7 @@ const User = () => {
 
 const UserPreviewGrid = ({ users }) => {
     if (users.length === 0) {
-        return <h1 className='display-4 text-muted'>There are currently no users in Copy Code :(</h1>
+        return <h1 className='display-4 text-muted'>There are currently no users on Copy Code</h1>
     }
     let userElementList = users.map((user) =>
         <Col key={user.name} sm md={4}><UserPreview user={user} /></Col>

@@ -7,6 +7,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
+const User = require('./models/User');
+const bcrypt = require('bcryptjs');
 
 // Init mongoose
 const initDB = async () => {
@@ -16,6 +18,16 @@ const initDB = async () => {
     });
     const db = mongoose.connection;
     db.on("error", console.error.bind(console, "MongoDB connection error"));
+
+    // If there is no admin user => Add one
+    const user = await User.findOne({admin: true});
+    if (!user) {
+        await new User({
+            name: 'admin',
+            password: await bcrypt.hash('admin', 10),
+            admin: true
+        }).save();
+    }
 }
 initDB();
 

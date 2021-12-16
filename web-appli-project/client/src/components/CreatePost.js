@@ -55,7 +55,6 @@ const Create = () => {
                 body: JSON.stringify(post)
             })
             data = await res.json();
-            console.log(data);
         }
         catch { }
 

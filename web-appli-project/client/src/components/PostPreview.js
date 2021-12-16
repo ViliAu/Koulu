@@ -50,7 +50,7 @@ const PostPreview = ({post}) => {
                     <Card.Footer>
                         <Row>
                             <Col xs={'auto'} style={{marginRight: -15}}>
-                                <UserImage id={author.image} size={25} className={'align-top'} />{' '}
+                                <UserImage user={author} size={25} className={'align-top'} />{' '}
                             </Col>
                             <Col xs={'auto'}>{author.name}</Col>
                             <Col></Col>

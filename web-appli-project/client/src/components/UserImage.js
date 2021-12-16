@@ -1,16 +1,20 @@
 import { React, useState, useEffect } from 'react';
 
-const UserImage = ({ alt, id, size, className }) => {
+const UserImage = ({ user, size, className, includeName }) => {
     const [imgSrc, setImgSrc] = useState('/defaultusericon.png');
 
     useEffect(() => {
         let mounted = true;
         async function fetchData() {
-            if (!id || id === 'none') {
+            if (user.admin) {
+                setImgSrc('/admin.png');
+                return;
+            }
+            if (!user.image || user.image === 'none') {
                 return;
             }
             try {
-                const res = await fetch('/api/image/' + id);
+                const res = await fetch('/api/image/' + user.image);
                 const imgBlob = await res.blob();
                 if (mounted) {
                     if (imgBlob && res.ok) {
@@ -24,27 +28,33 @@ const UserImage = ({ alt, id, size, className }) => {
         return () => {
             mounted = false;
         }
-    }, [id]);
+    }, [user]);
 
     return (
         <div>
             <img
-                alt={alt}
+                alt={user.name + ' image'}
                 src={imgSrc}
                 width={size}
                 height={size}
                 className={className}
                 style={{borderRadius: '50%'}}
             />
+            {includeName ? ' '+user.name : ''}
         </div>
     )
 }
 
 UserImage.defaultProps = {
+    user: {
+        name: 'defaultuser',
+        admin: false,
+        if: null
+    },
     alt: '',
-    id: null,
     size: 100,
-    className: ''
+    className: '',
+    includeName: false
 }
 
 export default UserImage;

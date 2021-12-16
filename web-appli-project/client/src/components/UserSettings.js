@@ -124,7 +124,7 @@ const UserSettings = () => {
         userData.bio = document.getElementById('formBio').value;
         userData.image = imgID.id;
         try {
-            const res = await fetch(`/api/user/updateuser?name=${user.name}`, {
+            const res = await fetch(`/api/user/updateuser?id=${user._id}`, {
                 method: 'PATCH',
                 headers: {
                     'content-type': 'application/json',
@@ -185,12 +185,12 @@ const UserSettings = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBio">
-                        <Form.Label>Bio</Form.Label>
+                        <Form.Label>Bio <small className='text-muted'>Optional</small></Form.Label>
                         <Form.Control as="textarea" placeholder="Enter a quick summary about yourself" rows={8} defaultValue={user ? user.bio : ''} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formNewPassword">
-                        <Form.Label>New password</Form.Label>
+                        <Form.Label>New password <small className='text-muted'>Optional</small></Form.Label>
                         <InputGroup className='mb-3'>
                             <Form.Control type="password" placeholder="Password" pattern={'^$|^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&?])[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
                             <Button variant="outline-secondary" id="newPswdButton" onClick={changeNewPasswordVisibility}><img alt='' src='/eye_closed.png' width={25} height={25} /></Button>
@@ -211,7 +211,7 @@ const UserSettings = () => {
                     </Form.Group>
 
                     <Form.Group noValidate controlId="formImage" className="mb-3">
-                        <Form.Label>Profile image</Form.Label>
+                        <Form.Label>Profile image <small className='text-muted'>Optional</small></Form.Label>
                         <Form.Control type="file" />
                     </Form.Group>
 

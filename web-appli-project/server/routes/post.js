@@ -17,10 +17,10 @@ router.get('/preview', async (req, res) => {
         let postArray = [];
         let postObjects = [];
         if (author) {
-            postArray = await Post.find({ author: `/${author}/i` }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
+            postArray = await Post.find({ author: author }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
         else if (title) {
-            postArray = await Post.find({ title: `/${title}/i` }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
+            postArray = await Post.find({ title: new RegExp(title, 'i') }, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
         }
         else {
             postArray = await Post.find({}, '_id title text author ratings lastEdited').sort({ lastEdited: 'desc' }).exec();
@@ -48,7 +48,6 @@ router.get('/preview', async (req, res) => {
 
 });
 
-// TODO: LISÄÄ KOMMENTTIEN LIKE LASKURI
 // Returns a post with all comments to the client
 router.get('/postdata', async (req, res) => {
     const { id } = req.query;
@@ -56,6 +55,8 @@ router.get('/postdata', async (req, res) => {
         // Fetch post and fetch all comments
         const post = await Post.findById(id).exec();
         let fetchedComments = [];
+
+        // Get all comments
         for (comment of post.comments) {
             const commentObj = await Comment.findById(comment._id).exec();
             // Check if comment exists
@@ -68,7 +69,6 @@ router.get('/postdata', async (req, res) => {
         for (like of post.ratings) {
             rating += like.rating;
         }
-        console.log(rating);
         res.status(200).send({ success: true, post: post, comments: fetchedComments, rating: rating });
     }
     catch (e) {
@@ -99,6 +99,43 @@ router.post('/',
             res.status(500).json({ success: false, error: "Something went wrong!" });
         }
     });
+
+router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    const { id } = req.query;
+    try {
+        let post = await Post.findById(id).exec();
+        if (post) {
+            // Check authorization
+            if (!req.user.admin && !post.author.equals(req.user._id)) {
+                return res.status(401).send({ success: false, error: "Unauthorized" });
+            }
+            for (comment of post.comments) {
+                await Comment.findByIdAndDelete(comment._id).exec();
+            }
+            await Post.findByIdAndDelete(id).exec();
+            return res.status(200).json({success: true});
+        }  
+        else {
+            post = await Comment.findById(id).exec();
+            if (post) {
+                // Check authorization
+                if (!req.user.admin && !post.author.equals(req.user._id)) {
+                    return res.status(401).send({ success: false, error: "Unauthorized" });
+                }
+                await Comment.findByIdAndDelete(id).exec();
+                return res.status(200).json({success: true});
+            }
+            else {
+                return res.status(404).json({success: false, error: "Couldn't find post"});
+            }
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.status(500).json({ success: false, error: "Something went wrong!" });
+    }
+
+});
 
 // Adds a comment to the database and links it to the post
 router.post('/comment',
@@ -139,7 +176,7 @@ router.put('/rate', passport.authenticate('jwt', { session: false }), async (req
         return res.status(400).json({ success: false, error: "Bad request" });
     }
     try {
-        let post = Post.findById(id);
+        let post = await Post.findById(id).exec();
         if (post) {
             // Clear previous ratings and update with the new one
             await Post.findByIdAndUpdate(id, { $pull: { ratings: { author: req.user._id } } }).exec();
@@ -147,7 +184,7 @@ router.put('/rate', passport.authenticate('jwt', { session: false }), async (req
             res.status(200).json({ success: true });
         }
         else {
-            post = Comment.findById(id);
+            post = await Comment.findById(id).exec();
             if (post) {
                 // Clear previous ratings and update with the new one
                 await Comment.findByIdAndUpdate(id, { $pull: { ratings: { author: req.user._id } } }).exec();
@@ -161,6 +198,74 @@ router.put('/rate', passport.authenticate('jwt', { session: false }), async (req
     }
     catch (e) {
         console.log(e);
+        res.status(500).json({ success: false, error: "Something went wrong!" });
+    }
+});
+
+router.patch('/edit',
+    body('title').trim().isLength({ min: 1, max: 50 }).escape(),
+    body('text').isLength({ min: 1 }).escape(),
+    passport.authenticate('jwt', { session: false }), async (req, res) => {
+        const { id } = req.query;
+
+        // Validate form
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ success: false, error: "Post title and body cannot be empty." });
+        }
+
+        try {
+            // Try to find the edited post
+            let post = await Post.findById(id);
+            const date = new Date().toISOString();
+            if (post) {
+                // Check authorization
+                if (!req.user.admin && !post.author.equals(req.user._id)) {
+                    return res.status(401).send({ success: false, error: "Unauthorized" });
+                }
+                else {
+                    await Post.findByIdAndUpdate(id, {
+                        title: req.body.title,
+                        text: req.body.text,
+                        code: req.body.code,
+                        lastEdited: date
+                    }).exec();
+                    res.json({ success: true });
+                }
+            }
+            else {
+                post = await Comment.findById(id);
+                if (post) {
+                    // Check authorization
+                    if (!req.user.admin && !post.author.equals(req.user._id)) {
+                        return res.status(401).send({ success: false, error: "Unauthorized" });
+                    }
+                    else {
+                        await Comment.findByIdAndUpdate(id, {
+                            title: req.body.title,
+                            text: req.body.text,
+                            lastEdited: date
+                        }).exec();
+                        res.json({ success: true });
+                    }
+                }
+                else {
+                    return res.status(404).send({ success: false, error: "Post not found" });
+                }
+            }
+        }
+        catch (e) {
+            console.log(e);
+            res.status(500).json({ success: false, error: "Something went wrong!" });
+        }
+    });
+
+router.get('/amount', async (req, res) => {
+    try {
+        const p = await Post.find({});
+        res.status(200).json({amount: p.length});
+    }
+    catch {
         res.status(500).json({ success: false, error: "Something went wrong!" });
     }
 });

@@ -19,7 +19,7 @@ const UserPreview = ({ user }) => {
             <Container id='postBody' text='light' style={{ padding: 20, marginTop: 20, backgroundColor: '#1A1C1E', borderRadius: 8, border: '', color: 'rgb(240, 240, 240)' }} >
                 <Row>
                     <Col xs={'auto'}>
-                        <UserImage id={user.image} />
+                        <UserImage user={user} />
                     </Col>
                     <Col>
                         <Stack gap={2}>

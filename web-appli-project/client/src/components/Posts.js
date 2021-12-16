@@ -1,5 +1,6 @@
-import {React, useEffect, useState} from 'react';
+import { React, useEffect, useState } from 'react';
 import LinkContainer from 'react-router-bootstrap/LinkContainer'
+import { Link } from 'react-router-dom';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -20,9 +21,10 @@ const Posts = () => {
             try {
                 const req = await fetch(`/api/post/preview` + query);
                 const data = await req.json();
+                console.log(data)
                 if (mounted) {
                     if (req.ok) {
-                        setPosts(data.previews.map((post) => <PostPreview post={post}/>))
+                        setPosts(data.previews.map((post) => <PostPreview key={post.id} post={post} />))
                     }
                 }
             }
@@ -32,30 +34,29 @@ const Posts = () => {
         return () => {
             mounted = false;
         }
-    }, [query]);
+    }, []);
 
     return (
         <Allposts posts={posts} />
     );
-
 }
 
-const Allposts = ({posts}) => {
-    
+const Allposts = ({ posts }) => {
+
     let isLoggedIn = localStorage.getItem('auth_token') !== null;
 
     return (
         <Container text='light' style={{ padding: 10 }}>
-            <Row className="d-flex align-items-middle" float="center">
+            <Row className="d-flex align-items-middle" float="center" style={{marginBottom: 10}}>
                 <Col md={'auto'} xs={6}>
-                    <h1>All posts on CODE SITE</h1>
+                    <a href='/posts' style={{ textDecoration: 'none', color: 'rgb(240, 240, 240)' }}><h1>Latest posts</h1></a>
                 </Col>
                 <Col xs={0}></Col>
-                <Col xs={'auto'} className="text-center">
-                    {isLoggedIn && 
-                    <LinkContainer to='/create'>
-                        <Button variant='outline-primary' >+ Create post</Button>
-                    </LinkContainer>}
+                <Col xs={'auto'}>
+                    {isLoggedIn &&
+                        <LinkContainer to='/create'>
+                            <Button variant='primary' >+ Create post</Button>
+                        </LinkContainer>}
                 </Col>
             </Row>
             <Row>

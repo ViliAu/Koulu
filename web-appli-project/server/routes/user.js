@@ -10,8 +10,8 @@ require('../auth/passport.js')(passport)
 // Usernames and passwords can't contain dangerous symbols so they aren't escaped
 // TODO: timeout after x seconds
 router.post('/login',
-    body('name').trim().isLength({ min: 3, max: 15 }).matches(/^[a-zA-Z\d]{3,15}$/),
-    body('password').isLength({ min: 8, max: 20 }).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&\?])[a-zA-Z\d!@#$%^&\?]{8,20}$/),
+    body('name').trim().matches(/^[a-zA-Z\d]{3,15}$/),
+    body('password').matches(/^admin$|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&\?])[a-zA-Z\d!@#$%^&\?]{8,20}$/),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -106,10 +106,10 @@ router.patch('/updateuser',
     body('password').matches(/^$|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&?])[a-zA-Z\d!@#$%^&?]{8,20}$/),
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
-        const name = req.query.name;
+        const {id} = req.query;
         // Validate user and check if the updates are valid
         // Is the user authorized?
-        if (req.user.name !== name) {
+        if (!req.user._id.equals(id)) {
             console.log("Unauthorized");
             res.status(401).json({ success: false, error: 'Unauthorized' });
             return;
@@ -142,8 +142,8 @@ router.patch('/updateuser',
         newUserData.bio = req.body.bio;
 
         try {
-            const updateUser = await User.findOneAndUpdate({name: req.user.name}, newUserData);
-            res.status(200).json({ success: true, error: 'none' });
+            await User.findOneAndUpdate({name: req.user.name}, newUserData);
+            res.status(200).json({ success: true});
         }
         catch (e) {
             console.log(e);
@@ -152,12 +152,20 @@ router.patch('/updateuser',
 
     });
 
-// Returns a user object without password on success, otherwise returns a 401 status
+// Returns a user object on success, otherwise returns a 401 status
 // A name can be passed as well to check validity (for example while changing settings)
 router.get('/authenticate', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    const name = req.query.name;
+    const {name, id} = req.query;
     if (name) {
-        if ((req.user.name === name)) {
+        if ((req.user.admin || req.user.name === name)) {
+            res.status(200).send(req.user);
+        }
+        else {
+            res.status(401).end();
+        }
+    }
+    else if (id) {
+        if ((req.user.admin || req.user._id.equals(id))) {
             res.status(200).send(req.user);
         }
         else {
@@ -168,6 +176,16 @@ router.get('/authenticate', passport.authenticate('jwt', { session: false }), as
         res.status(200).send(req.user);
     }
 
+});
+
+router.get('/amount', async (req, res) => {
+    try {
+        const u = await User.find({});
+        res.status(200).json({amount: u.length});
+    }
+    catch {
+        res.status(500).json({ success: false, error: "Something went wrong!" });
+    }
 });
 
 module.exports = router;
