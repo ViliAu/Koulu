@@ -70,7 +70,7 @@ const UserSettings = () => {
         document.getElementById('formNewPassword').type = newPswdVisible ? 'text' : 'password';
         document.getElementById('formConfirmNewPassword').type = newPswdVisible ? 'text' : 'password';
         const pswdBtn = document.getElementById('newPswdButton');
-        pswdBtn.querySelector('img').src = newPswdVisible ? '/eye.png' : '/eye_closed.png';
+        pswdBtn.querySelector('img').src = newPswdVisible ? '/eye.svg' : '/eye_closed.svg';
     }
 
     const checkFormValidity = async (event) => {
@@ -199,8 +199,8 @@ const UserSettings = () => {
                     <Form.Group className="mb-3" controlId="formNewPassword">
                         <Form.Label>New password <small className='text-muted'>Optional</small></Form.Label>
                         <InputGroup className='mb-3'>
-                            <Form.Control type="password" placeholder="Password" pattern={'^$|^((?=.*[a-z])(?=.*[A-Z])|(?=.*\\d)|(?=.*[!@#$%^&?]))[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
-                            <Button variant="outline-secondary" id="newPswdButton" onClick={changeNewPasswordVisibility}><img alt='' src='/eye_closed.png' width={25} height={25} /></Button>
+                            <Form.Control type="password" placeholder="Password" pattern={'^$|^((?=.*[a-z])(?=.*[A-Z])|(?=.*\\d)|(?=.*[!@#$%^&?]))[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword}/>
+                            <Button variant="outline-secondary" id="newPswdButton" onClick={changeNewPasswordVisibility}><img alt='' src='/eye_closed.svg' width={25} height={25} /></Button>
                             <Form.Control.Feedback type='invalid'>
                                 Password must be either empty or contain between 8-20 characters and must contain a capital letter or a number or a special character (!@#$%^&?).
                             </Form.Control.Feedback>

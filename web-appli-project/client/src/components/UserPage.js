@@ -11,11 +11,10 @@ import Button from 'react-bootstrap/Button';
 
 import CenterItem from './CenterItem';
 import UserImage from './UserImage';
-import NotFound from './NotFound';
 import LoadingSpinner from './LoadingSpinner';
 
 const UserPage = () => {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
     const [user, setUser] = useState(null);
     const { id } = useParams();
     // Get user on load
@@ -29,14 +28,15 @@ const UserPage = () => {
                 const data = await req.json();
                 let authData = {};
                 try {
-                    let authRreq = await fetch(`/api/user/authenticate?name=${id}`, {
+                    let authReq = await fetch(`/api/user/authenticate?name=${id}`, {
                         method: 'GET',
                         headers: { 'authorization': 'Bearer ' + localStorage.getItem('auth_token') }
                     });
-                    authData = await req.json();
+                    authData = await authReq.json();
                     // Token expired => delete it
-                    if (authRreq.status === 401) {
+                    if (authReq.status === 401) {
                         localStorage.removeItem('auth_token');
+                        setLoggedIn(false);
                     }
                 }
                 catch { }

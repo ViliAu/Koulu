@@ -73,7 +73,7 @@ const Register = () => {
         document.getElementById('formPassword').type = pswdVisible ? 'text' : 'password';
         document.getElementById('formConfirmPassword').type = pswdVisible ? 'text' : 'password';
         const pswdBtn = document.getElementById('pswdButton');
-        pswdBtn.querySelector('img').src = pswdVisible ? '/eye.png' : '/eye_closed.png';
+        pswdBtn.querySelector('img').src = pswdVisible ? '/eye.svg' : '/eye_closed.svg';
     }
 
     return (
@@ -103,7 +103,7 @@ const Register = () => {
                         <Form.Label>Password</Form.Label>
                         <InputGroup className='mb-3' hasValidation>
                             <Form.Control type="password" placeholder="Password" required pattern={'^((?=.*[a-z])(?=.*[A-Z])|(?=.*\\d)|(?=.*[!@#$%^&?]))[a-zA-Z\\d!@#$%^&?]{8,20}$'} onKeyUp={updatePassword} />
-                            <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img alt='' src='/eye_closed.png' width={25} height={25} /></Button>
+                            <Button variant="outline-secondary" id="pswdButton" onClick={changePasswordVisibility}><img alt='' src='/eye_closed.svg' width={25} height={25} /></Button>
                             <Form.Control.Feedback type='invalid'>
                                 Password must be between 8-20 characters and must contain a capital letter or a number or a special character (!@#$%^&?).
                             </Form.Control.Feedback>

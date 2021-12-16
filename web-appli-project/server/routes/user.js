@@ -84,7 +84,7 @@ router.get('/getuser', async (req, res) => {
     try {
         let result;
         if (name) {
-            result = await User.findOne({ name: new RegExp('^'+ req.body.name + '$', "i") }, '-password');
+            result = await User.findOne({ name: new RegExp('^'+ name + '$', "i") }, '-password');
         }
         else if (id) {
             result = await User.findById(id, '-password');
@@ -166,22 +166,22 @@ router.get('/authenticate', passport.authenticate('jwt', { session: false }), as
     const {name, id} = req.query;
     if (name) {
         if ((req.user.admin || req.user.name === name)) {
-            res.status(200).send(req.user);
+            return res.status(200).send(req.user);
         }
         else {
-            res.status(401).end();
+            return res.status(401).end();
         }
     }
     else if (id) {
         if ((req.user.admin || req.user._id.equals(id))) {
-            res.status(200).send(req.user);
+            return res.status(200).send(req.user);
         }
         else {
-            res.status(401).end();
+            return res.status(401).end();
         }
     }
     else {
-        res.status(200).send(req.user);
+        return res.status(200).send(req.user);
     }
 
 });

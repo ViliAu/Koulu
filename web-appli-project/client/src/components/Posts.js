@@ -33,7 +33,7 @@ const Posts = () => {
         return () => {
             mounted = false;
         }
-    }, []);
+    }, [query]);
 
     return (
         <Allposts posts={posts} />

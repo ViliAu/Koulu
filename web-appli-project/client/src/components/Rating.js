@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button'
 
 const Rating = ({ user, rating, userRating, id }) => {
 
@@ -35,9 +36,9 @@ const Rating = ({ user, rating, userRating, id }) => {
 
     return (
         <Container className='text-center noselect'>
-            <div id='1' onClick={handleRating} style={{ fontSize: 18 }}>{user ? userRating > 0 ? '▲' : '△' : ' '}</div>
+            <Button size='sm' id='1' onClick={handleRating} style={{ fontSize: 18, background: 'none', border: 'none'}}>{user ? userRating > 0 ? '▲' : '△' : ' '}</Button>
             <div style={{ fontSize: 15 }}>{rating}</div>
-            <div id='-1' onClick={handleRating} style={{ fontSize: 18 }}>{user ? userRating < 0 ? '▼' : '▽' : ' '}</div>
+            <Button size='sm' id='-1' onClick={handleRating} style={{ fontSize: 18, background: 'none', border: 'none'}}>{user ? userRating < 0 ? '▼' : '▽' : ' '}</Button>
         </Container>
     );
 }

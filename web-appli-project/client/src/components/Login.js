@@ -67,7 +67,7 @@ const Login = () => {
         pswdVisible = !pswdVisible;
         document.getElementById('formPassword').type = pswdVisible ? 'text' : 'password';
         const pswdBtn = document.getElementById('pswdButton');
-        pswdBtn.querySelector('img').src = pswdVisible ? '/eye.png' : '/eye_closed.png';
+        pswdBtn.querySelector('img').src = pswdVisible ? '/eye.svg' : '/eye_closed.svg';
     }
 
 
@@ -96,7 +96,7 @@ const Login = () => {
                         <Form.Label>Password</Form.Label>
                         <InputGroup className='mb-3'>
                             <Form.Control type='password' required pattern={'[a-zA-Z\\d!@#$%^&?]{1,20}$'} />
-                            <Button variant='outline-secondary' id='pswdButton' onClick={changePasswordVisibility}><img alt='' src='/eye_closed.png' width={25} height={25} /></Button>
+                            <Button variant='outline-secondary' id='pswdButton' onClick={changePasswordVisibility}><img alt='' src='/eye_closed.svg' width={25} height={25} /></Button>
                         </InputGroup>
                         <Form.Control.Feedback id='usernameFeedback' type='invalid'>Please enter a password.</Form.Control.Feedback>
                     </Form.Group>
