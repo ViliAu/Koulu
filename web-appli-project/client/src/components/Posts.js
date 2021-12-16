@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import LinkContainer from 'react-router-bootstrap/LinkContainer'
-import { Link } from 'react-router-dom';
+import Helmet from 'react-helmet';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -21,7 +21,6 @@ const Posts = () => {
             try {
                 const req = await fetch(`/api/post/preview` + query);
                 const data = await req.json();
-                console.log(data)
                 if (mounted) {
                     if (req.ok) {
                         setPosts(data.previews.map((post) => <PostPreview key={post.id} post={post} />))
@@ -47,6 +46,9 @@ const Allposts = ({ posts }) => {
 
     return (
         <Container text='light' style={{ padding: 10 }}>
+            <Helmet>
+                <title>Posts</title>
+            </Helmet>
             <Row className="d-flex align-items-middle" float="center" style={{marginBottom: 10}}>
                 <Col md={'auto'} xs={6}>
                     <a href='/posts' style={{ textDecoration: 'none', color: 'rgb(240, 240, 240)' }}><h1>Latest posts</h1></a>

@@ -9,12 +9,15 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 import CenterItem from './CenterItem';
 import RedirectComponent from './RedirectComponent';
+import AlertComponent from './AlertComponent';
 
 const UserSettings = () => {
     const [user, setUser] = useState(null);
     const [redirect, setRedirect] = useState('');
     const [password, setPassword] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [error, setError] = useState('');
 
     let newPswdVisible = false;
 
@@ -97,12 +100,12 @@ const UserSettings = () => {
         }
         // The backend didn't accept our request => parse error
         if (data && !data.success) {
-            // TODO: Create a nicer looking error
-            event.stopPropagation();
-            setValidated(true);
             if (data.error) {
-                alert(data.error);
+                setError(data.error);
+                setShowAlert(true);
             }
+            event.stopPropagation();
+            setValidated(false);
             return;
         }
         else {
@@ -134,7 +137,11 @@ const UserSettings = () => {
             });
             const resData = await res.json();
             if (!resData.success) {
-                alert(resData.error);
+                if (resData.error) {
+                    setError(resData.error);
+                    setShowAlert(true);
+                }
+                setValidated(false);
                 return;
             }
             // Use vanilla redirect to refresh navbar
@@ -219,6 +226,7 @@ const UserSettings = () => {
                         Submit
                     </Button>
                 </Form>
+                <AlertComponent header={'Error!'} message={error} show={showAlert} setShowAlert={setShowAlert}/>
             </Container>
             <RedirectComponent redirect={redirect} />
         </CenterItem>

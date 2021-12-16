@@ -22,8 +22,9 @@ function App() {
   return (
     <Router>
       <Helmet>
-        <title>Welcome to SITE</title>
+        <title>NullPointer</title>
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <link rel="icon" href="/logo.png" />
       </Helmet>
       <MyNavbar />
       <Container className='App'>

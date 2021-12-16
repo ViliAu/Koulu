@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Rating from './Rating';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import {Link} from 'react-router-dom';
 
 import UserImage from './UserImage';
 import LoadingSpinner from './LoadingSpinner';
@@ -131,7 +132,7 @@ const Comment = ({ comment, user }) => {
                             <Row>
                                 <Col xs={'auto'} style={{ marginRight: -15 }}>{'By:  '}</Col>
                                 <Col xs={'auto'} style={{ marginRight: -15 }}>
-                                    <UserImage user={author} size={25} className={'align-top'} />{' '}
+                                <Link to={'/users/' + author.name} style={{ textDecoration: 'none', color: 'rgb(240, 240, 240)' }}><UserImage user={author} size={25} className={'align-top'} includeName /></Link>
                                 </Col>
                                 <Col xs={'auto'}>{author.name}</Col>
                                 <Col></Col>

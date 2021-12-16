@@ -1,4 +1,5 @@
 import { React, useEffect, useState } from 'react'
+import Helmet from 'react-helmet';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -35,7 +36,10 @@ const User = () => {
     if (users) {
         return (
             <Container>
-                <h1 className='display-2 text-center'>All users on Copy Code</h1>
+                <Helmet>
+                    <title>Users</title>
+                </Helmet>
+                <h1 className='display-2 text-center'>All users on NullPointer</h1>
                 <hr />
                 <UserPreviewGrid users={users} />
             </Container>
@@ -52,7 +56,7 @@ const User = () => {
 
 const UserPreviewGrid = ({ users }) => {
     if (users.length === 0) {
-        return <h1 className='display-4 text-muted'>There are currently no users on Copy Code</h1>
+        return <h1 className='display-4 text-muted'>There are currently no users on NullPointer</h1>
     }
     let userElementList = users.map((user) =>
         <Col key={user.name} sm md={4}><UserPreview user={user} /></Col>

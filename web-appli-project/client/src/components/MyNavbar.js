@@ -62,22 +62,18 @@ const MyNavbar = () => {
                         <Navbar.Brand>
                             <img
                                 alt=''
-                                src='/logo192.png'
+                                src='/logo.svg'
                                 width='30'
                                 height='30'
                                 className='d-inline-block align-top'
                             />{' '}
-                            <Col className="d-none d-md-inline-block">Coding site</Col>
+                            <Col className="d-none d-md-inline-block">NullPointer</Col>
                         </Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Collapse>
                         <Nav className='me-auto'>
-                            <LinkContainer to='/posts'>
-                                <Nav.Link>Posts</Nav.Link>
-                            </LinkContainer>
-                            <LinkContainer to='/users'>
-                                <Nav.Link>Users</Nav.Link>
-                            </LinkContainer>
+                            <Nav.Link href='/posts'>Posts</Nav.Link>
+                            <Nav.Link href='/users'>Users</Nav.Link>
                         </Nav>
                         <Form className='d-flex' onSubmit={handleSearch} style={{ paddingRight: 10 }}>
                             <FormControl
@@ -109,10 +105,13 @@ const LogInText = ({ user }) => {
             <Nav>
                 <NavDropdown title={user.name} id="navbarScrollingDropdown">
                     <LinkContainer to={`/users/${user.name}`}>
-                        <NavDropdown.Item>User</NavDropdown.Item>
+                        <NavDropdown.Item>User page</NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to={`/posts?author=${user._id}`}>
-                        <NavDropdown.Item>Posts</NavDropdown.Item>
+                        <NavDropdown.Item>Your posts</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to={`/users/${user.name}/settings`}>
+                        <NavDropdown.Item>Settings</NavDropdown.Item>
                     </LinkContainer>
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={logOut}>Log out</NavDropdown.Item>

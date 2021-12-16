@@ -10,12 +10,12 @@ require('../auth/passport.js')(passport)
 // Usernames and passwords can't contain dangerous symbols so they aren't escaped
 // TODO: timeout after x seconds
 router.post('/login',
-    body('name').trim().matches(/^[a-zA-Z\d]{3,15}$/),
-    body('password').matches(/^admin$|^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&\?])[a-zA-Z\d!@#$%^&\?]{8,20}$/),
+    body('name').trim().matches(/^[a-zA-Z\d]{0,15}$/),
+    body('password').matches(/^admin$|^[a-zA-Z\d!@#$%^&\?]{0,20}$/),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ success: false, error: 'Invalid form' });
+            return res.status(400).json({ success: false, error: 'Name or password contains incorrect characters.' });
         }
         try {
             const result = await User.findOne({ name: new RegExp(req.body.name, 'i') });
@@ -33,16 +33,16 @@ router.post('/login',
                     res.status(200).json({ success: true, token });
                 }
                 else {
-                    res.status(403).json({ success: false, error: "Invalid credentials" });
+                    res.status(403).json({ success: false, error: "Invalid credentials." });
                 }
             }
             else {
-                res.status(400).send({ success: false, error: "Invalid credentials" });
+                res.status(400).send({ success: false, error: "Invalid credentials." });
             }
         }
         catch (e) {
             console.log(e);
-            res.status(500).send({ success: false, error: "Something went wrong" });
+            res.status(500).send({ success: false, error: "Something went wrong." });
         }
     });
 
@@ -121,7 +121,7 @@ router.patch('/updateuser',
             return res.status(400).json({ success: false, error: 'Invalid form' });
         }
         // Is the username taken?
-        if (req.body.name !== req.body.name) {
+        if (req.body.name !== req.user.name) {
             const user = await User.findOne({ name: req.body.name });
             if (user) {
                 console.log("User already exists");
@@ -147,6 +147,10 @@ router.patch('/updateuser',
         }
         catch (e) {
             console.log(e);
+            // failsafe
+            if (e.codeName === 'DuplicateKey') {
+                res.status(400).json({ success: false, error: 'Username is already taken' });
+            }
             res.status(500).json({ success: false, error: 'Something went wrong!' });
         }
 

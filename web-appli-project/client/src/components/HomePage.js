@@ -36,9 +36,9 @@ const HomePage = () => {
             <Container className='text-center'>
                 <img
                     alt=''
-                    src='logo192.png'
+                    src='/logo.svg'
                 />
-                <h1 className='display-1'>Welcome to OP coding site</h1>
+                <h1 className='display-1'>Welcome to NullPointer</h1>
                 <h1 className='lead'>The world's most popular place for desperate developers</h1>
                 <h3 className='display-7'>Currently having {postAmount} posts from {userAmount} users</h3>
             </Container>

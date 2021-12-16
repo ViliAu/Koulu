@@ -7,9 +7,12 @@ import Button from 'react-bootstrap/Button';
 import Helmet from 'react-helmet';
 import CenterItem from './CenterItem';
 import InputGroup from 'react-bootstrap/InputGroup'
+import AlertComponent from './AlertComponent';
 
 const Login = () => {
     const [validated, setValidated] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [error, setError] = useState('');
 
     let pswdVisible = false;
 
@@ -42,13 +45,13 @@ const Login = () => {
         catch { }
 
         // Form was valid but credentials incorrect
-        // TODO: Nicer looking message
         if (!data.success) {
             if (data.error) {
-                alert(data.error);
+                setError(data.error);
+                setShowAlert(true);
             }
             event.stopPropagation();
-            setValidated(true);
+            setValidated(false);
             return;
         }
 
@@ -76,14 +79,13 @@ const Login = () => {
             <Container className='text-center'>
                 <img
                     alt=''
-                    src='logo192.png'
+                    src='/logo.svg'
                     className='center'
                 />
                 <h1 className='display-3'>Log in</h1>
             </Container>
-
             <CenterItem md={5}>
-                <Form noValidate validated={validated} className='loginForm' onSubmit={handleSubmit} autoComplete='off'>
+                <Form noValidate validated={validated} className='loginForm' onSubmit={handleSubmit} autoComplete='off' style={{marginBottom: 25}}>
                     <Form.Group className='mb-3' controlId='formUsername'>
                         <Form.Label>Username</Form.Label>
                         <Form.Control type='text' required pattern={'^[a-zA-Z\\d]{3,15}$'} />
@@ -105,9 +107,9 @@ const Login = () => {
                         Don't have an account? <Link to='/register'>Register now!</Link>
                     </Form.Text>
                 </Form>
+                <AlertComponent header={'Error!'} message={error} show={showAlert} setShowAlert={setShowAlert}/>
             </CenterItem>
         </>
     );
 }
-
 export default Login

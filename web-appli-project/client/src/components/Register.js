@@ -8,10 +8,14 @@ import Helmet from 'react-helmet';
 import RedirectComponent from './RedirectComponent';
 import InputGroup from 'react-bootstrap/InputGroup';
 
+import AlertComponent from './AlertComponent';
+
 const Register = () => {
     const [validated, setValidated] = useState(false);
     const [redirect, setRedirect] = useState('');
     const [password, setPassword] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [error, setError] = useState('');
 
     let pswdVisible = false;
 
@@ -47,11 +51,11 @@ const Register = () => {
 
         // The backend didn't accept our request => parse error
         if (!data.success) {
-            // TODO: Create a nicer looking error
             event.stopPropagation();
-            setValidated(true);
+            setValidated(false);
             if (data.error) {
-                alert(data.error);
+                setError(data.error);
+                setShowAlert(true);
             }
         }
         else {
@@ -80,13 +84,13 @@ const Register = () => {
             <Container className='text-center'>
                 <img
                     alt=''
-                    src='logo192.png'
+                    src='/logo.svg'
                 />
                 <h1 className='display-3 text-center'>Register</h1>
             </Container>
 
             <CenterItem md={5}>
-                <Form noValidate validated={validated} onSubmit={checkFormValidity} autoComplete='off'>
+                <Form noValidate validated={validated} onSubmit={checkFormValidity} autoComplete='off' style={{marginBottom: 25}}>
 
                     <Form.Group className="mb-3" controlId="formUsername">
                         <Form.Label>Username</Form.Label>
@@ -124,6 +128,7 @@ const Register = () => {
                         Submit
                     </Button>
                 </Form>
+                <AlertComponent header={'Error!'} message={error} show={showAlert} setShowAlert={setShowAlert}/>
             </CenterItem>
             <RedirectComponent redirect={redirect} />
         </>
