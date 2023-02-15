@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div style="width: 800px;"><canvas id="chart"></canvas></div>
+    <div id="chart-options">
+        <select name="Chart type" id="chart-type">
+            <option value="bar">Bar</option>
+            <option value="line">Line</option>
+        </select>
+        <select name="Chart alignment" id="chart-alignment">
+            <option value="y">Horizontal</option>
+            <option value="x">Vertical</option>
+        </select>
+        <input type="checkbox" name="" id="chart-show-mean" checked="true">
+        <input type="color" name="Chart color" id="chart-color" value="#639fff">
+        <input type="color" name="Chart outline color" id="chart-outline-color" value="#639fff">
+    </div>
+    <div>
+        <button id="add-data">Add data point</button>
+        <button id="clear-data">Clear all data</button>
+        <button id="build-chart">Build chart</button>
+        <button id="export-image">Export image</button>
+    </div>
+
+    <div id="data-area"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.1.0/chartjs-plugin-annotation.min.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
