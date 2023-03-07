@@ -5,6 +5,7 @@ const chartAlignmentEl = document.getElementById('chart-alignment');
 const chartShowMeanEl = document.getElementById('chart-show-mean');
 const chartColorEl = document.getElementById('chart-color');
 const chartOutlineColorEl = document.getElementById('chart-outline-color');
+const chartFontSize = document.getElementById('font-size');
 
 document.getElementById('add-data').addEventListener('click', () => {
     const div = document.createElement("div")
@@ -82,7 +83,6 @@ const createChart = (t, s) => {
         myChart = null;
     }
     ann = chartShowMeanEl.checked ? {annotations: {annotation}} : {}
-
     const chartData = {
         type: chartTypeEl.value,
         data: {
@@ -102,11 +102,13 @@ const createChart = (t, s) => {
             plugins: {
                 annotation: ann,
                 legend: {
-                    display: false
+                    display: false,
                 }
             },
         }
     }
+
+    Chart.defaults.font.size = parseInt(chartFontSize.value);
     
     if (chartTypeEl.value === 'line') {
         chartData.data.datasets[0].fill = false;
